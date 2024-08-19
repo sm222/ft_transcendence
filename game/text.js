@@ -1,94 +1,91 @@
 import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry';
-import { scene } from './render.js';
+
 
 // https://stackoverflow.com/questions/50472752/change-extrude-amount-textgeometry-three-js
+// https://github.com/ztrottie/ft_transcendence/blob/game_dev/srcs/web/www/Game/components/Text.js
 
-const loader = new FontLoader();
-var   font
 
-loader.load(
-  // resource URL
-  'fonts/Open Sans_Regular.json',
+export class Text {
+	constructor(scene, position, initialText, color = 'blue', FontName = 'fonts/Ubuntu Light_Bold.json') {
+		this.scene = scene;
+		this.position = position;
+    this.rotation = {x:0, y:0, z:0}
+		this._text = initialText;
+		this.textMesh = null;
+		this.font = null;
+    this.color = color
+    this.FontName = FontName
+		this.loadFont();
+	}
 
-  // onLoad callback
-  function ( font ) {
-    // do something with the font
-    console.log( font );
-    const tt = new TextGeometry( 'play', {
-      font: font,
-      size: 1,
-      height: 0.1,
-      curveSegments: 5,
-      bevelEnabled: true,
-      bevelThickness: 0,
-      bevelSize: 0.01,
-      bevelOffset: 0.05,
-      bevelSegments: 1
-    } );
-    const mm = new THREE.MeshNormalMaterial();
-    const out = new THREE.Mesh(tt, mm);
-    out.rotation.y = 1.56
-    out.position.z = 1.3
-    out.position.y = 2.6 
-    scene.add(out);
-  },
-  // onProgress callback
-  function ( xhr ) {
-  	console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-  },
+	loadFont() {
+		const loader = new FontLoader();
+		loader.load(this.FontName, (font) => {
+			this.font = font;
+			this.createTextMesh();
+		});
+	}
 
-// onError callback
-function ( err ) {
-    console.log( 'An error happened' );
+	createTextMesh() {
+		if (!this.font) {
+			console.error('Font not loaded yet');
+			return;
+		}
+
+		if (this.textMesh) {
+			this.scene.remove(this.textMesh);
+			this.textMesh.geometry.dispose();
+			this.textMesh.material.dispose();
+		}
+	
+		const textGeometry = new TextGeometry(String(this._text), {
+			font: this.font,
+			size: 0.5,
+			height: 0.1,
+			curveSegments: 12,
+			bevelEnabled: false,
+		});
+    
+		const textMaterial = new THREE.MeshStandardMaterial({ color: this.color });
+		this.textMesh = new THREE.Mesh(textGeometry, textMaterial);
+    this.textMesh.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z)
+		textGeometry.computeBoundingBox();
+		const bbox = textGeometry.boundingBox;
+		const textWidth = bbox.max.x - bbox.min.x;
+		const textDepth = bbox.max.z - bbox.min.z;
+	
+		// Centrer le texte
+
+
+    this.textMesh.position.set(
+			this.position.x - (textWidth / 2) - 0.08,
+			this.position.y,
+			this.position.z + textDepth * 2
+		);
+		this.scene.add(this.textMesh);
+	}
+	
+  move(_x, _y, _z) {
+    this.position.x = _x
+    this.position.y = _y
+    this.position.z = _z
+    this.createTextMesh();
   }
-);
-
-export function makeText() {
-  
-}
-
-
-
-class text3D extends TextGeometry {
-  constructor({
-    text,
-    font: font,
-  }) {
-    super (
-      text, {
-        font: font,
-        size: 1,
-        height: 0.1,
-        curveSegments: 5,
-        bevelEnabled: true,
-        bevelThickness: 0,
-        bevelSize: 0.01,
-        bevelOffset: 0.05,
-        bevelSegments: 1
-      }
-    )
-    const MeshnormMat = new THREE.MeshNormalMaterial()
-    const meshfinal = new THREE.Mesh(tg, MeshnormMat)
-
+	update(newText) {
+		if (this._text !== newText) {
+			this._text = newText;
+			this.createTextMesh();
+		}
+	}
+  rotate(_x, _y, _z) {
+    this.rotation.x = THREE.MathUtils.degToRad(_x);
+    this.rotation.y = THREE.MathUtils.degToRad(_y);
+    this.rotation.z = THREE.MathUtils.degToRad(_z);
+    this.createTextMesh();
   }
-  GiveMesh() {
-    return meshfinal
+  kill() {
+    this.scene.remove(this.textMesh)
   }
-}
-
-export function importText (fontName, text) {
-  font = loader.load(fontName)
-  tg = new TextGeometry( 'lol', {
-    font: font,
-    size: 1,
-    height: 0.1,
-    curveSegments: 5,
-    bevelEnabled: true,
-    bevelThickness: 0,
-    bevelSize: 0.01,
-    bevelOffset: 0.05,
-    bevelSegments: 1
-  } );
 }

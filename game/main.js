@@ -3,18 +3,25 @@ import { Draw, scene } from './render.js'
 import { initGame } from './game.js'
 import { initMenu } from './menu.js'
 import { keys, KeyBordinput } from './keybord.js'
-import { importText } from './text.js'
+import { Text } from './text.js'
+import { GUI } from 'three/addons/libs/lil-gui.module.min'
+
+
+
 
 
 
 //https://youtu.be/sPereCgQnWQ?si=8OPsM8BTY7RlDg4E
 
+
+
 Draw()         //* init
-importText()
+//importText()
 KeyBordinput() //> setup keybord
-var out = importText('fonts/Open Sans_Regular.json', "test")
-scene.add(out)
+
 initMenu()     //~ start the menu
+
+
 
 
 

@@ -3,13 +3,14 @@ import { Box } from './box.js'
 import { scene, camera, renderer, Draw } from './render.js'
 import { keys } from './keybord.js'
 import { initGame } from './game.js'
+import { Text  } from './text.js'
 
 
-
+export let output = []
 let MenuLight = []
 let MenuObj   = []
-let TextMenu  = []
-let Select    = 0
+let MenuText  = []
+//let Select    = 0
 let Loop      = 1
 let on        = false
 let a         = 3
@@ -40,6 +41,7 @@ function MoveArrow(x, y, z) {
 }
 
 export function initMenu() {
+  MenuText[0] = new Text(scene, {x:0, y:0, z:0}, 'fml', 'red')
   on = false
   MenuLight[0] = new THREE.DirectionalLight(0xffffff, 1)
   MenuLight[1] = new THREE.AmbientLight(0xffffff, 0.5)
@@ -102,24 +104,14 @@ function LeaveMenu() {
   MenuObj.forEach(obj => {
     scene.remove(obj)
   })
+  MenuText.forEach(txt => {
+    txt.kill()
+  })
 }
 
-
-
-
-
+let vvv = 0
 
 function MainMenu() {
-  // text
-  //boxPosition.setFromMatrixPosition(MenuObj[0].matrixWorld)
-  //boxPosition.project(camera)
-  //var wh = canvas.width / 2
-  //var hh = canvas.height / 2
-  //boxPosition.x = (boxPosition.x * wh) + wh
-  //boxPosition.y = - (boxPosition.y * hh) + hh
-  //followText.style.top = `${boxPosition.y}px`
-  //followText.style.left = `${boxPosition.x}px`
-  //% 
   if (keys.a.pressed && !on) {
     a += 3
     if (a > 3)
@@ -134,6 +126,8 @@ function MainMenu() {
     MoveArrow(0, a, 4)
     on = true
   }
+  MenuText[0].rotate(vvv, vvv, vvv)
+  vvv++
   if (!keys.d.pressed && !keys.a.pressed)
     on = false
   if (keys.space.pressed) {
