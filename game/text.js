@@ -50,30 +50,37 @@ export class Text {
     
 		const textMaterial = new THREE.MeshStandardMaterial({ color: this.color });
 		this.textMesh = new THREE.Mesh(textGeometry, textMaterial);
-    this.textMesh.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z)
-		textGeometry.computeBoundingBox();
-		const bbox = textGeometry.boundingBox;
-		const textWidth = bbox.max.x - bbox.min.x;
-		const textDepth = bbox.max.z - bbox.min.z;
-	
+    //this.textMesh.rotation.set()
+    textGeometry.computeBoundingBox();
+    this.bbox = textGeometry.boundingBox;
+
 		// Centrer le texte
-
-
-    this.textMesh.position.set(
-			this.position.x - (textWidth / 2) - 0.08,
-			this.position.y,
-			this.position.z + textDepth * 2
-		);
+    this.Update()
 		this.scene.add(this.textMesh);
 	}
-	
+  Update() {
+    if (this.textMesh) {
+      const textWidth = this.bbox.max.x - this.bbox.min.x;
+      const textDepth = this.bbox.max.z - this.bbox.min.z;
+      this.textMesh.position.set(
+        this.position.x - (textWidth / 2) - 0.08,
+        this.position.y,
+        this.position.z + textDepth * 2
+      );
+      const vec3 = new THREE.Vector3(this.rotation.x, this.rotation.y, this.rotation.z)
+      this.textMesh.rotation.x = vec3.x
+      this.textMesh.rotation.y = vec3.y
+      this.textMesh.rotation.z = vec3.z
+    }
+  }
+
   move(_x, _y, _z) {
     this.position.x = _x
     this.position.y = _y
     this.position.z = _z
-    this.createTextMesh();
+    this.Update()
   }
-	update(newText) {
+	updateTxt(newText) {
 		if (this._text !== newText) {
 			this._text = newText;
 			this.createTextMesh();
@@ -83,7 +90,7 @@ export class Text {
     this.rotation.x = THREE.MathUtils.degToRad(_x);
     this.rotation.y = THREE.MathUtils.degToRad(_y);
     this.rotation.z = THREE.MathUtils.degToRad(_z);
-    this.createTextMesh();
+    this.Update()
   }
   kill() {
     this.scene.remove(this.textMesh)

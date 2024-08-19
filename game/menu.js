@@ -109,8 +109,6 @@ function LeaveMenu() {
   })
 }
 
-let vvv = 0
-
 function MainMenu() {
   if (keys.a.pressed && !on) {
     a += 3
@@ -126,8 +124,6 @@ function MainMenu() {
     MoveArrow(0, a, 4)
     on = true
   }
-  MenuText[0].rotate(vvv, vvv, vvv)
-  vvv++
   if (!keys.d.pressed && !keys.a.pressed)
     on = false
   if (keys.space.pressed) {
