@@ -8,7 +8,8 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry';
 
 
 export class Text {
-	constructor(scene, position, initialText, color = 'blue', FontName = 'fonts/Ubuntu Light_Bold.json') {
+	constructor(scene, position, initialText, color = 'blue', 
+    FontName = 'fonts/Ubuntu Light_Bold.json', detail = {}) {
 		this.scene = scene;
 		this.position = position;
     this.rotation = {x:0, y:0, z:0}
@@ -17,6 +18,11 @@ export class Text {
 		this.font = null;
     this.color = color
     this.FontName = FontName
+    //
+    this.size = 0.5
+    this.height = 0.1
+    this.curveSegments = 12
+
 		this.loadFont();
 	}
 
@@ -42,9 +48,9 @@ export class Text {
 	
 		const textGeometry = new TextGeometry(String(this._text), {
 			font: this.font,
-			size: 0.5,
-			height: 0.1,
-			curveSegments: 12,
+			size: this.size,
+			height: this.height,
+			curveSegments: this.curveSegments,
 			bevelEnabled: false,
 		});
     
@@ -84,8 +90,18 @@ export class Text {
 		if (this._text !== newText) {
 			this._text = newText;
 			this.createTextMesh();
-		}
-	}
+    }
+  }
+
+  updateSize(_size, _deapth, _curveSegments) {
+    if (this.textMesh) {
+      this.size = _size
+      this.height = _deapth
+      this.curveSegments = _curveSegments
+      this.createTextMesh();
+    }
+  }
+
   rotate(_x, _y, _z) {
     this.rotation.x = THREE.MathUtils.degToRad(_x);
     this.rotation.y = THREE.MathUtils.degToRad(_y);

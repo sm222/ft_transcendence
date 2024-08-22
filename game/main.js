@@ -1,10 +1,8 @@
 import * as THREE from 'three'
 import { Draw, scene } from './render.js'
-import { initGame } from './game.js'
 import { initMenu } from './menu.js'
 import { keys, KeyBordinput } from './keybord.js'
-import { Text } from './text.js'
-import { GUI } from 'three/addons/libs/lil-gui.module.min'
+
 
 
 
@@ -15,11 +13,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min'
 
 
 
-Draw()         //* init
+Draw()          //* init
 //importText()
-KeyBordinput() //> setup keybord
+KeyBordinput()  //> setup keybord
 
-initMenu()     //~ start the menu
+initMenu()      //~ start the menu
 
 
 
