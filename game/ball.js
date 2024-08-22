@@ -85,9 +85,18 @@ export class ball extends Obj {
     this.speedX = _x
     this.speedZ = _z
   }
+  playerPoin() {
+    let p = 0
+    if (this.position.z < -this.gameSize * 2 || this.position.z > this.gameSize * 2) {
+      p = Number(this.position.z)
+      this.position.z = 0
+      this.position.x = 0
+    }
+    return p
+  }
+
   applyGravity(ground) {
     this.velocity.y += this.gravity
-
     // this is where we hit the ground
     if (this.position.x > this.gameSize) {
       this.velocity.x = -1

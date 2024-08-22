@@ -18,10 +18,16 @@ let   BallSpeedZ  =  0.02
 let   Light       = []
 let   Amlight     = []
 let   GameText    = []
+let   WinRound    = 0
 
 let GameLoop = 1
 
-export function initGame(gamesize) {
+
+function rand(max) {
+  return Math.floor(Math.random() * max)
+}
+
+export function initGame(gamesize, p1Name , p1color, p2Name, p2color) {
   GameLoop = 1
   keys.space.pressed = false
   GameSize = gamesize
@@ -95,8 +101,8 @@ export function initGame(gamesize) {
   camera.position.set(Map[0].position.x / 2, Map[0].position.y + GameSize, Map[0].position.z / 2)
   camera.lookAt(Map[0].position)
   // name
-  GameText[0] = new Text(scene, {x:0,y:0,z:0}, 'Løsted', 'pink')
-  GameText[1] = new Text(scene, {x:0,y:0,z:0}, 'pierre', 'lightseagreen')
+  GameText[0] = new Text(scene, {x:0,y:0,z:0}, p1Name, p1color)
+  GameText[1] = new Text(scene, {x:0,y:0,z:0}, p2Name, p2color)
   GameText[0].rotate(-90,0,0)
   GameText[1].rotate(-90,0,0)
   // ball
@@ -117,8 +123,14 @@ export function initGame(gamesize) {
     }})
   Ball.forEach(obj => {
     obj.setSpeed(0.10, 0.10)
-    obj.velocity.x = 1
-    obj.velocity.z = 1
+    if (rand(2) === 1)
+      obj.velocity.x = 1
+    else
+      obj.velocity.x = -1
+    if (rand(2) === 1)
+      obj.velocity.z = 1
+    else
+      obj.velocity.z = -1
     obj.setGameSize(gamesize)
     scene.add(obj)
   })
@@ -147,14 +159,7 @@ function LeaveGame() {
 }
 
 function Gaming() {
-  if (GameLoop) {
-    Draw()
-    requestAnimationFrame(Gaming)
-  }
-  else {
-    initMenu()
-    return
-  }
+
   GameText[0].move(Players[1].position.x, Players[1].position.y + 1, Players[1].position.z - 0.5)
   GameText[1].move(Players[0].position.x, Players[0].position.y + 1, Players[0].position.z + 0.5)
   GameText.forEach(txt => {
@@ -173,6 +178,9 @@ function Gaming() {
       b.applyGravity(p)
     })
     b.update()
+    WinRound =  b.playerPoin()
+    if (WinRound !== 0)
+      console.log("win = " + WinRound)
   })
 
   if (keys.k.pressed) {
@@ -202,6 +210,14 @@ function Gaming() {
     Players.forEach((player) => {
     player.update(Map[0])
   })
+  if (GameLoop) {
+    Draw()
+    requestAnimationFrame(Gaming)
+  }
+  else {
+    initMenu()
+    return
+  }
 }
 
 

@@ -10,10 +10,9 @@ export let output = []
 let MenuLight = []
 let MenuObj   = []
 let MenuText  = []
-//let Select    = 0
 let Loop      = 1
 let on        = false
-let a         = 3
+let menuChoice         = 3
 
 function AddButton(p, layer) {
   MenuObj[layer] = new Box({
@@ -96,7 +95,7 @@ export function initMenu() {
     scene.add(light)
   })
   camera.position.set(10, 0, 0)
-  MoveArrow(0, a, 4)
+  MoveArrow(0, menuChoice, 4)
   MainMenu()
 }
 
@@ -114,17 +113,17 @@ function LeaveMenu() {
 
 function MenuInput() {
   if (keys.a.pressed && !on) {
-    a += 3
-    if (a > 3)
-      a = -3
-    MoveArrow(0, a, 4)
+    menuChoice += 3
+    if (menuChoice > 3)
+      menuChoice = -3
+    MoveArrow(0, menuChoice, 4)
     on = true
   }
   if (keys.d.pressed && !on) {
-    a -= 3
-    if (a < -3)
-      a = 3
-    MoveArrow(0, a, 4)
+    menuChoice -= 3
+    if (menuChoice < -3)
+      menuChoice = 3
+    MoveArrow(0, menuChoice, 4)
     on = true
   }
   if (!keys.d.pressed && !keys.a.pressed)
@@ -134,11 +133,17 @@ function MenuInput() {
 function MainMenu() {
   MenuInput()
   if (keys.space.pressed) {
-    switch (a) {
+    switch (menuChoice) {
       case 3:
         Loop = 0
         LeaveMenu()
-        initGame(10)
+        initGame(10, 'bob', 'pink', 'mike', 'lightseagreen')
+        //        ^    ^       ^       ^       ^
+        // game size   |       |       |       |
+        //  player1 name       |       |       |
+        //         player1 color       |       |
+        //                  player2 name       |
+        //                         player2 color
         break;
       default:
         break;
