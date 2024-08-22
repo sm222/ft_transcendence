@@ -7,10 +7,12 @@ import { Text } from './text.js'
 import { ball } from './ball.js'
 
 
-let   Round       =  0
+let   Round       =  -1
+let   Pause       =  true
+let   PauseTime   =  60
 let   GameSize    =  15
 let   PlayerSpeed =  0.15
-let   BallSpeed   =  0.07
+let   BallSpeed   =  0.04
 let   ScoreValue  = []
 let   Players     = []
 let   Map         = []
@@ -27,16 +29,18 @@ function rand(max) {
   return Math.floor(Math.random() * max)
 }
 
-export async function initGame(gamesize, 
+export function initGame(gamesize, 
       p1Name , p1color, 
       p2Name, p2color) {
+  Round = -1
   GameLoop = 1
+  PauseTime = 300
+  Pause = true
   ScoreValue[0] = 0
   ScoreValue[1] = 0
   keys.space.pressed = false
   GameSize = gamesize
   PlayerSpeed = 0.15
-  Round = 0
   Map[0] = new Box({
     width: GameSize,
     height: 0.5,
@@ -125,7 +129,7 @@ export async function initGame(gamesize,
       y: -0.01,
       z: 0
     },
-  position:{
+    position:{
       x: 0,
       y: -1.5,
       z: 0
@@ -170,7 +174,7 @@ function LeaveGame() {
 }
 
 
-function score(WinRound) {
+function score() {
   Ball.forEach(b => {
     Players.forEach(p => {
       b.applyGravity(p)
@@ -179,6 +183,8 @@ function score(WinRound) {
     WinRound =  b.playerPoin()
   })
   if (WinRound !== 0) {
+    Pause = true
+    console.log(Round)
     Ball[0].setSpeed(BallSpeed, BallSpeed)
     if (WinRound > 0)
       ScoreValue[0]++
@@ -188,8 +194,8 @@ function score(WinRound) {
   }
   GameText[2].updateSize(2, 0.4, 12)
   GameText[2].updateTxt(String(ScoreValue[0] + '\n' + ScoreValue[1]))
-  if (Round == 3)
-    return 1
+  if (WinRound != 0)
+    return -1
   return 0
 }
 
@@ -197,43 +203,54 @@ function moveText() {
   GameText[0].move(Players[1].position.x, Players[1].position.y + 1, Players[1].position.z - 0.5)
   GameText[1].move(Players[0].position.x, Players[0].position.y + 1, Players[0].position.z + 0.5)
   GameText.forEach(txt => {
-    txt.rotate(THREE.MathUtils.radToDeg(camera.rotation.x), 
-    THREE.MathUtils.radToDeg(camera.rotation.y), 
+    txt.rotate(THREE.MathUtils.radToDeg(camera.rotation.x),
+    THREE.MathUtils.radToDeg(camera.rotation.y),
     THREE.MathUtils.radToDeg(camera.rotation.z))
   })
 }
 
 // await new Promise(r => setTimeout(r, 1000));
 
-function keybordGame() {
-  if (keys.a.pressed && Players[0].position.x >
+function keybordGame(noGame) {
+  if (noGame) {
+    Players.forEach((player) => { player.update(Map[0])})
+    Players.forEach(p => {p.position.x = 0})
+    return
+  }
+    if (keys.a.pressed && Players[0].position.x >
     (GameSize / 2) * -1 + (Players[0].width / 2)) {
-   Players[0].velocity.x = PlayerSpeed * -1
-  }
-  else if (keys.d.pressed && Players[0].position.x <
-    (GameSize / 2) - (Players[0].width / 2)) {
-    Players[0].velocity.x = PlayerSpeed
-  }
-  if (keys.left.pressed && Players[1].position.x >
+      Players[0].velocity.x = PlayerSpeed * -1
+    }
+    else if (keys.d.pressed && Players[0].position.x <
+      (GameSize / 2) - (Players[0].width / 2)) {
+        Players[0].velocity.x = PlayerSpeed
+      }
+    if (keys.left.pressed && Players[1].position.x >
     (GameSize / 2) * -1 + (Players[1].width / 2)) {
-   Players[1].velocity.x = PlayerSpeed * -1
-  }
-  else if (keys.right.pressed && Players[1].position.x <
-    (GameSize / 2) - (Players[1].width / 2)) {
-    Players[1].velocity.x = PlayerSpeed
-  }
-    Players.forEach((player) => {
-    player.update(Map[0])
-  })
+      Players[1].velocity.x = PlayerSpeed * -1
+    }
+    else if (keys.right.pressed && Players[1].position.x <
+      (GameSize / 2) - (Players[1].width / 2)) {
+        Players[1].velocity.x = PlayerSpeed
+    }
+  Players.forEach((player) => { player.update(Map[0])})
 }
 
-async function Gaming() {
-  moveText()
 
+function Gaming() {
+  if (!Pause)
+    Round = score()
+  else {
+    PauseTime--
+    if (PauseTime == 0) {
+      Pause = false
+      PauseTime = 300
+    }
+  }
+  keybordGame(Pause)
+  moveText()
   //let ing = Math.atan2(Players[1].position.y - Players[0].position.y , Players[1].position.x - Players[0].position.x)
   //camera.rotation.z = ing
-  keybordGame()
-  score(WinRound)
   if (keys.k.pressed) {
     LeaveGame()
   }
