@@ -95,31 +95,41 @@ export class ball extends Obj {
     return p
   }
 
-  applyGravity(ground) {
-    this.velocity.y += this.gravity
-    // this is where we hit the ground
-    if (this.position.x > this.gameSize) {
+  applyGravity(player) {
+    if (this.position.x >= this.gameSize) {
       this.velocity.x = -1
+      this.position.x = this.gameSize
+      console.log("r wall")
+      return
     }
-    else if (this.position.x < (-this.gameSize)) {
+    else if (this.position.x <= (-this.gameSize)) {
       this.velocity.x = 1
-    }
+      this.position.x = -this.gameSize
+      console.log("l wall")
+      return
+    } 
     if (
       boxCollision({
         box1: this,
-        box2: ground
+        box2: player
       })
     ) {
-        if (this.position.z < ground.position.z) {
+        this.speedX += (player.velocity.x / 10)
+        if (this.position.z <= player.position.z) {
           this.velocity.z = -1
         }
-        else if (this.position.z > ground.position.z ) {
+        else if (this.position.z >= player.position.z ) {
           this.velocity.z = 1
+        }
+        if (player.velocity.x != 0) {
+          if (player.velocity.x > this.velocity.x)
+            this.velocity.x = -1
+          else
+            this.velocity.x = 1
         }
     } 
   }
   setGameSize(size) {
-    console.log(size)
     this.gameSize = size / 2
   }
 }

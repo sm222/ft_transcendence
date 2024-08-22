@@ -10,11 +10,11 @@ import { ball } from './ball.js'
 let   Round       =  0
 let   GameSize    =  15
 let   PlayerSpeed =  0.15
+let   BallSpeed   =  0.07
+let   ScoreValue  = []
 let   Players     = []
 let   Map         = []
 let   Ball        = []
-let   BallSpeedX  =  0.02
-let   BallSpeedZ  =  0.02
 let   Light       = []
 let   Amlight     = []
 let   GameText    = []
@@ -27,8 +27,12 @@ function rand(max) {
   return Math.floor(Math.random() * max)
 }
 
-export function initGame(gamesize, p1Name , p1color, p2Name, p2color) {
+export async function initGame(gamesize, 
+      p1Name , p1color, 
+      p2Name, p2color) {
   GameLoop = 1
+  ScoreValue[0] = 0
+  ScoreValue[1] = 0
   keys.space.pressed = false
   GameSize = gamesize
   PlayerSpeed = 0.15
@@ -42,7 +46,10 @@ export function initGame(gamesize, p1Name , p1color, p2Name, p2color) {
       x: 0,
       y: -2,
       z: 0
-    }
+    },
+    zAcceleration:true,
+    opacity:0.3,
+    transparent: true
   })
   // player
   Players[0] = new Box({
@@ -105,6 +112,8 @@ export function initGame(gamesize, p1Name , p1color, p2Name, p2color) {
   GameText[1] = new Text(scene, {x:0,y:0,z:0}, p2Name, p2color)
   GameText[0].rotate(-90,0,0)
   GameText[1].rotate(-90,0,0)
+  GameText[2] = new Text(scene, {x:0,y:-4,z:-1.5}, '0:0', 'yellow')
+
   // ball
   Ball[0] = new ball({
     width: 0.4,
@@ -122,11 +131,11 @@ export function initGame(gamesize, p1Name , p1color, p2Name, p2color) {
       z: 0
     }})
   Ball.forEach(obj => {
-    obj.setSpeed(0.10, 0.10)
+    obj.setSpeed(BallSpeed, BallSpeed)
     if (rand(2) === 1)
       obj.velocity.x = 1
     else
-      obj.velocity.x = -1
+    obj.velocity.x = -1
     if (rand(2) === 1)
       obj.velocity.z = 1
     else
@@ -134,12 +143,14 @@ export function initGame(gamesize, p1Name , p1color, p2Name, p2color) {
     obj.setGameSize(gamesize)
     scene.add(obj)
   })
+  console.log(camera.position)
+  console.log(camera.rotation)
   Gaming()
 }
 
 function LeaveGame() {
   GameLoop = false
-
+  
   Players.forEach(player => {
     scene.remove(player)
   })
@@ -158,39 +169,43 @@ function LeaveGame() {
   })
 }
 
-function Gaming() {
 
-  GameText[0].move(Players[1].position.x, Players[1].position.y + 1, Players[1].position.z - 0.5)
-  GameText[1].move(Players[0].position.x, Players[0].position.y + 1, Players[0].position.z + 0.5)
-  GameText.forEach(txt => {
-    txt.rotate(THREE.MathUtils.radToDeg(camera.rotation.x), 
-              THREE.MathUtils.radToDeg(camera.rotation.y), 
-              THREE.MathUtils.radToDeg(camera.rotation.z))
-  })
-  //
-  //let ing = Math.atan2(Players[1].position.y - Players[0].position.y , Players[1].position.x - Players[0].position.x)
-  //camera.rotation.z = ing
-
+function score(WinRound) {
   Ball.forEach(b => {
-    //b.velocity.z
-    //b.velocity.x
     Players.forEach(p => {
       b.applyGravity(p)
     })
     b.update()
     WinRound =  b.playerPoin()
-    if (WinRound !== 0)
-      console.log("win = " + WinRound)
   })
-
-  if (keys.k.pressed) {
-    LeaveGame()
-    console.log("a")
+  if (WinRound !== 0) {
+    Ball[0].setSpeed(BallSpeed, BallSpeed)
+    if (WinRound > 0)
+      ScoreValue[0]++
+    else
+      ScoreValue[1]++
+    Round++
   }
-  Players.forEach(player => {
-    player.velocity.x = 0
+  GameText[2].updateSize(2, 0.4, 12)
+  GameText[2].updateTxt(String(ScoreValue[0] + '\n' + ScoreValue[1]))
+  if (Round == 3)
+    return 1
+  return 0
+}
+
+function moveText() {
+  GameText[0].move(Players[1].position.x, Players[1].position.y + 1, Players[1].position.z - 0.5)
+  GameText[1].move(Players[0].position.x, Players[0].position.y + 1, Players[0].position.z + 0.5)
+  GameText.forEach(txt => {
+    txt.rotate(THREE.MathUtils.radToDeg(camera.rotation.x), 
+    THREE.MathUtils.radToDeg(camera.rotation.y), 
+    THREE.MathUtils.radToDeg(camera.rotation.z))
   })
-  // control
+}
+
+// await new Promise(r => setTimeout(r, 1000));
+
+function keybordGame() {
   if (keys.a.pressed && Players[0].position.x >
     (GameSize / 2) * -1 + (Players[0].width / 2)) {
    Players[0].velocity.x = PlayerSpeed * -1
@@ -210,6 +225,24 @@ function Gaming() {
     Players.forEach((player) => {
     player.update(Map[0])
   })
+}
+
+async function Gaming() {
+  moveText()
+
+  //let ing = Math.atan2(Players[1].position.y - Players[0].position.y , Players[1].position.x - Players[0].position.x)
+  //camera.rotation.z = ing
+  keybordGame()
+  score(WinRound)
+  if (keys.k.pressed) {
+    LeaveGame()
+  }
+  //console.log("ball.x  " + Ball[0].position.x)
+  Players.forEach(player => {
+    player.velocity.x = 0
+  })
+  // control
+
   if (GameLoop) {
     Draw()
     requestAnimationFrame(Gaming)

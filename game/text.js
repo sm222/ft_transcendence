@@ -8,14 +8,14 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry';
 
 
 export class Text {
-	constructor(scene, position, initialText, color = 'blue', 
+  constructor(scene, position, initialText, color = 'blue', 
     FontName = 'fonts/Ubuntu Light_Bold.json', detail = {}) {
-		this.scene = scene;
-		this.position = position;
+    this.scene = scene;
+    this.position = position;
     this.rotation = {x:0, y:0, z:0}
-		this._text = initialText;
-		this.textMesh = null;
-		this.font = null;
+    this._text = initialText;
+    this.textMesh = null;
+    this.font = null;
     this.color = color
     this.FontName = FontName
     //
@@ -23,47 +23,46 @@ export class Text {
     this.height = 0.1
     this.curveSegments = 12
 
-		this.loadFont();
-	}
+    this.loadFont();
+  }
 
-	loadFont() {
-		const loader = new FontLoader();
-		loader.load(this.FontName, (font) => {
-			this.font = font;
-			this.createTextMesh();
-		});
-	}
+  loadFont() {
+    const loader = new FontLoader();
+    loader.load(this.FontName, (font) => {
+      this.font = font;
+      this.createTextMesh();
+    });
+  }
 
-	createTextMesh() {
-		if (!this.font) {
-			console.error('Font not loaded yet');
-			return;
-		}
+  createTextMesh() {
+    if (!this.font) {
+      console.error('Font not loaded yet');
+      return;
+    }
 
-		if (this.textMesh) {
-			this.scene.remove(this.textMesh);
-			this.textMesh.geometry.dispose();
-			this.textMesh.material.dispose();
-		}
-	
-		const textGeometry = new TextGeometry(String(this._text), {
-			font: this.font,
-			size: this.size,
-			height: this.height,
-			curveSegments: this.curveSegments,
-			bevelEnabled: false,
-		});
+    if (this.textMesh) {
+      this.scene.remove(this.textMesh);
+      this.textMesh.geometry.dispose();
+      this.textMesh.material.dispose();
+    }
+  
+    const textGeometry = new TextGeometry(String(this._text), {
+      font: this.font,
+      size: this.size,
+      height: this.height,
+      curveSegments: this.curveSegments,
+      bevelEnabled: false,
+    });
     
-		const textMaterial = new THREE.MeshStandardMaterial({ color: this.color });
-		this.textMesh = new THREE.Mesh(textGeometry, textMaterial);
-    //this.textMesh.rotation.set()
+    const textMaterial = new THREE.MeshStandardMaterial({ color: this.color });
+    this.textMesh = new THREE.Mesh(textGeometry, textMaterial);
     textGeometry.computeBoundingBox();
     this.bbox = textGeometry.boundingBox;
 
-		// Centrer le texte
+    // Centrer le texte
     this.Update()
-		this.scene.add(this.textMesh);
-	}
+    this.scene.add(this.textMesh);
+  }
   Update() {
     if (this.textMesh) {
       const textWidth = this.bbox.max.x - this.bbox.min.x;
@@ -86,20 +85,21 @@ export class Text {
     this.position.z = _z
     this.Update()
   }
-	updateTxt(newText) {
-		if (this._text !== newText) {
-			this._text = newText;
-			this.createTextMesh();
+  updateTxt(newText) {
+    if (this._text !== newText) {
+      this._text = newText;
+      this.createTextMesh();
     }
   }
 
   updateSize(_size, _deapth, _curveSegments) {
-    if (this.textMesh) {
-      this.size = _size
-      this.height = _deapth
-      this.curveSegments = _curveSegments
-      this.createTextMesh();
-    }
+      if (this.textMesh && this.size != _size 
+        && this.height != _deapth) {
+          this.size = _size
+          this.height = _deapth
+          this.curveSegments = _curveSegments
+          this.createTextMesh();
+        }
   }
 
   rotate(_x, _y, _z) {
