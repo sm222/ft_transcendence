@@ -7,20 +7,21 @@ import { Text } from './text.js'
 import { ball } from './ball.js'
 
 
-let   Round       =  -1
-let   Pause       =  true
-let   PauseTime   =  60
-let   GameSize    =  15
-let   PlayerSpeed =  0.15
-let   BallSpeed   =  0.04
-let   ScoreValue  = []
-let   Players     = []
-let   Map         = []
-let   Ball        = []
-let   Light       = []
-let   Amlight     = []
-let   GameText    = []
-let   WinRound    = 0
+let   Round        =  -1
+let   Pause        =  true
+const PauseTimeDef =  60 * 3
+let   PauseTime    =  PauseTimeDef
+let   GameSize     =  15
+let   PlayerSpeed  =  0.15
+let   BallSpeed    =  0.04
+let   ScoreValue   =  []
+let   Players      =  []
+let   Map          =  []
+let   Ball         =  []
+let   Light        =  []
+let   Amlight      =  []
+let   GameText     =  []
+let   WinRound     =  0
 
 let GameLoop = 1
 
@@ -34,7 +35,7 @@ export function initGame(gamesize,
       p2Name, p2color) {
   Round = -1
   GameLoop = 1
-  PauseTime = 300
+  PauseTime = PauseTimeDef
   Pause = true
   ScoreValue[0] = 0
   ScoreValue[1] = 0
@@ -157,12 +158,15 @@ function LeaveGame() {
   
   Players.forEach(player => {
     scene.remove(player)
+    player.kill()
   })
   Map.forEach(obj => {
     scene.remove(obj)
+    obj.kill()
   })
   Light.forEach(light => {
     scene.remove(light)
+    light.dispose()
   })
   scene.remove(Amlight)
   GameText.forEach(txt => {
@@ -170,6 +174,7 @@ function LeaveGame() {
   })
   Ball.forEach(obj => {
     scene.remove(obj)
+    obj.kill()
   })
 }
 
@@ -244,7 +249,7 @@ function Gaming() {
     PauseTime--
     if (PauseTime == 0) {
       Pause = false
-      PauseTime = 300
+      PauseTime = PauseTimeDef
     }
   }
   keybordGame(Pause)
@@ -254,12 +259,9 @@ function Gaming() {
   if (keys.k.pressed) {
     LeaveGame()
   }
-  //console.log("ball.x  " + Ball[0].position.x)
   Players.forEach(player => {
     player.velocity.x = 0
   })
-  // control
-
   if (GameLoop) {
     Draw()
     requestAnimationFrame(Gaming)

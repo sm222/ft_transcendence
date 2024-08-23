@@ -27,12 +27,15 @@ export class Obj extends THREE.Mesh {
       z: 0
     },
     zAcceleration = false,
-    Geometry = new THREE.BoxGeometry(width, height, depth)
+    Geometry = new THREE.BoxGeometry(width, height, depth),
+    Mat      = new THREE.MeshStandardMaterial({ color })
   ) {
       super(
         Geometry,
-        new THREE.MeshStandardMaterial({ color })
+        Mat
       )
+    this.Geometry = Geometry
+    this.Mat = Mat
     this.width = width
     this.height = height
     this.depth = depth
@@ -90,5 +93,9 @@ export class Obj extends THREE.Mesh {
       this.velocity.y *= friction
       this.velocity.y = -this.velocity.y
     } else this.position.y += this.velocity.y
+  }
+  kill() {
+    this.Geometry.dispose()
+    this.Mat.dispose()
   }
 }

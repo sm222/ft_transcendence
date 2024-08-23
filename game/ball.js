@@ -99,13 +99,11 @@ export class ball extends Obj {
     if (this.position.x >= this.gameSize) {
       this.velocity.x = -1
       this.position.x = this.gameSize
-      console.log("r wall")
       return
     }
     else if (this.position.x <= (-this.gameSize)) {
       this.velocity.x = 1
       this.position.x = -this.gameSize
-      console.log("l wall")
       return
     } 
     if (
@@ -131,5 +129,8 @@ export class ball extends Obj {
   }
   setGameSize(size) {
     this.gameSize = size / 2
+  }
+  kill() {
+    super.kill()
   }
 }

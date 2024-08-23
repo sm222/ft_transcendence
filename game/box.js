@@ -27,13 +27,17 @@ export class Box extends THREE.Mesh {
     },
     zAcceleration = false,
     opacity = 1,
-    transparent = false
+    transparent = false,
+    geo  = new THREE.BoxGeometry(width, height, depth),
+    mesh = new THREE.MeshStandardMaterial({ color, opacity: opacity, transparent: transparent })
   }) {
+    //dispose
     super(
-      new THREE.BoxGeometry(width, height, depth),
-      new THREE.MeshStandardMaterial({ color, opacity: opacity, transparent: transparent })
+      geo,
+      mesh
     )
-
+    this.geo = geo
+    this.mesh = geo
     this.width = width
     this.height = height
     this.depth = depth
@@ -91,5 +95,9 @@ export class Box extends THREE.Mesh {
       this.velocity.y *= friction
       this.velocity.y = -this.velocity.y
     } else this.position.y += this.velocity.y
+  }
+  kill() {
+    this.geo.dispose()
+    this.mesh.dispose()
   }
 }
