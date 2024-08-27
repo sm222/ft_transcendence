@@ -3,8 +3,7 @@ import * as THREE from 'three'
 
 export function objCollision({ obj1, obj2 }) {
   const xCollision = obj1.right >= obj2.left && obj1.left <= obj2.right
-  const yCollision =
-    obj1.bottom + obj1.velocity.y <= obj2.top && obj1.top >= obj2.bottom
+  const yCollision = obj1.bottom + obj1.velocity.y <= obj2.top && obj1.top >= obj2.bottom
   const zCollision = obj1.front >= obj2.back && obj1.back <= obj2.front
 
   return xCollision && yCollision && zCollision
@@ -35,10 +34,10 @@ export class Obj extends THREE.Mesh {
         Mat
       )
     this.Geometry = Geometry
-    this.Mat = Mat
-    this.width = width
-    this.height = height
-    this.depth = depth
+    this.Material = Mat
+    this.width    = width
+    this.height   = height
+    this.depth    = depth
 
     this.position.set(position.x, position.y, position.z)
 
@@ -71,11 +70,10 @@ export class Obj extends THREE.Mesh {
   update(ground) {
     this.updateSides()
 
-    if (this.zAcceleration) this.velocity.z += 0.0003
-
+    if (this.zAcceleration) 
+      this.velocity.z += 0.0003
     this.position.x += this.velocity.x
     this.position.z += this.velocity.z
-
     this.applyGravity(ground)
   }
 
@@ -83,19 +81,16 @@ export class Obj extends THREE.Mesh {
     this.velocity.y += this.gravity
 
     // this is where we hit the ground
-    if (
-      objCollision({
-        obj1: this,
-        obj2: ground
-      })
-    ) {
+    if (objCollision({obj1: this, obj2: ground })) {
       const friction = 0.5
       this.velocity.y *= friction
       this.velocity.y = -this.velocity.y
-    } else this.position.y += this.velocity.y
+    } else
+      this.position.y += this.velocity.y
   }
+
   kill() {
     this.Geometry.dispose()
-    this.Mat.dispose()
+    this.Material.dispose()
   }
 }

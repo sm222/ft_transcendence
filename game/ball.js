@@ -76,8 +76,6 @@ export class ball extends Obj {
   update() {
     this.updateSides()
 
-    if (this.zAcceleration) this.velocity.z += 0.0003
-
     this.position.x += this.velocity.x * this.speedX
     this.position.z += this.velocity.z * this.speedZ
   }
@@ -99,12 +97,10 @@ export class ball extends Obj {
     if (this.position.x >= this.gameSize) {
       this.velocity.x = -1
       this.position.x = this.gameSize
-      return
     }
     else if (this.position.x <= (-this.gameSize)) {
       this.velocity.x = 1
       this.position.x = -this.gameSize
-      return
     } 
     if (
       boxCollision({
@@ -112,20 +108,24 @@ export class ball extends Obj {
         box2: player
       })
     ) {
-        this.speedX += (player.velocity.x / 10)
-        if (this.position.z <= player.position.z) {
-          this.velocity.z = -1
-        }
-        else if (this.position.z >= player.position.z ) {
-          this.velocity.z = 1
-        }
-        if (player.velocity.x != 0) {
-          if (player.velocity.x > this.velocity.x)
-            this.velocity.x = -1
-          else
-            this.velocity.x = 1
-        }
-    } 
+      if (this.position.z > 0) {
+        this.velocity.z = -1
+      }
+      else {
+        this.velocity.z = 1
+      }
+      if (player.velocity.x != 0) {
+        if (player.velocity.x > this.velocity.x)
+          this.velocity.x = -1
+        else
+          this.velocity.x = 1
+      }
+      const xDist = this.position.x - player.position.x
+      const zDist = this.position.z - player.position.z
+      const angle = Math.atan2(zDist, xDist) * 180 / Math.PI
+      console.log(angle)
+      //this.speedX = angle
+    }
   }
   setGameSize(size) {
     this.gameSize = size / 2
@@ -134,3 +134,15 @@ export class ball extends Obj {
     super.kill()
   }
 }
+
+//!    let posAvatar = new THREE.Vector3();
+//?    avatar.getWorldPosition(posAvatar);
+//todo    
+//*    let posObj = new THREE.Vector3();
+//~   obj.getWorldPosition(posObj);
+//+   
+//-    const xDist = posObj.x - posAvatar.x;
+//>    const zDist = posObj.z - posAvatar.z;
+//    const angle = Math.atan2(zDist, xDist) * 180 / Math.PI;
+//    
+//    avatar.rotation.y = angle;

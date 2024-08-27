@@ -1,18 +1,21 @@
 import * as THREE from 'three'
 import { Box } from './box.js'
-import { scene, camera, renderer, Draw } from './render.js'
+import { scene, camera, Draw } from './render.js'
 import { keys } from './keybord.js'
 import { initGame } from './game.js'
-import { Text  } from './text.js'
+import { Text } from './text.js'
+import { MODEL3D } from './Import3D.js'
+
 
 
 export let output = []
-let MenuLight = []
-let MenuObj   = []
-let MenuText  = []
-let Loop      = 1
-let on        = false
-let menuChoice         = 3
+let MenuLight     = []
+let MenuObj       = []
+let MenuText      = []
+let custom        = []
+let Loop          = 1
+let on            = false
+let menuChoice    = 3
 
 function AddButton(p, layer) {
   MenuObj[layer] = new Box({
@@ -40,6 +43,10 @@ function MoveArrow(x, y, z) {
 }
 
 export function initMenu() {
+  let i = 0
+  for (let index = -30; index < 30; index += 10) {
+    custom[i++] = new MODEL3D(scene, {x:-10, y:-3, z:index}, [5,5,5])
+  }
   MenuText[0] = new Text(scene, {x:0, y:0, z:0}, 'Play', 'yellow')
   MenuText[0].rotate(0, 90, 0)
   MenuText[0].move(0.7, 3, 0.4)
@@ -102,12 +109,17 @@ export function initMenu() {
 function LeaveMenu() {
   MenuLight.forEach(light => {
     scene.remove(light)
+    light.dispose()
   })
   MenuObj.forEach(obj => {
     scene.remove(obj)
+    obj.kill()
   })
   MenuText.forEach(txt => {
     txt.kill()
+  })
+  custom.forEach(obj => {
+    obj.kill()
   })
 }
 

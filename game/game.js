@@ -6,10 +6,11 @@ import { initMenu } from './menu.js'
 import { Text } from './text.js'
 import { ball } from './ball.js'
 
+const PauseTimeDef =  (60 * 3) // time in frame (asuming it run a 60fps) wait 3 sec
+const BestOf       =  5        // exp: 3, 2 round to win
 
 let   Round        =  -1
 let   Pause        =  true
-const PauseTimeDef =  60 * 3
 let   PauseTime    =  PauseTimeDef
 let   GameSize     =  15
 let   PlayerSpeed  =  0.15
@@ -23,7 +24,7 @@ let   Amlight      =  []
 let   GameText     =  []
 let   WinRound     =  0
 
-let GameLoop = 1
+let   GameLoop     = 1
 
 
 function rand(max) {
@@ -33,13 +34,13 @@ function rand(max) {
 export function initGame(gamesize, 
       p1Name , p1color, 
       p2Name, p2color) {
+  //
   Round = -1
   GameLoop = 1
   PauseTime = PauseTimeDef
   Pause = true
-  ScoreValue[0] = 0
-  ScoreValue[1] = 0
-  keys.space.pressed = false
+  ScoreValue[0] = 0 // score
+  ScoreValue[1] = 0 // score
   GameSize = gamesize
   PlayerSpeed = 0.15
   Map[0] = new Box({
@@ -199,8 +200,8 @@ function score() {
   }
   GameText[2].updateSize(2, 0.4, 12)
   GameText[2].updateTxt(String(ScoreValue[0] + '\n' + ScoreValue[1]))
-  if (WinRound != 0)
-    return -1
+  if (ScoreValue[0] >= BestOf / 2 || ScoreValue[1] >= BestOf / 2)
+    return 1
   return 0
 }
 
@@ -243,20 +244,27 @@ function keybordGame(noGame) {
 
 
 function Gaming() {
-  if (!Pause)
-    Round = score()
+  let end = 0
+  keybordGame(Pause)
+  moveText()
+  if (!Pause) {
+    end = score()
+    //console.log(Ball[0].position)
+  }
   else {
+    var timer = 0
     PauseTime--
+    for (let index = PauseTime; index > 0; index -= 60) { timer++ }
+    GameText[2].updateSize(2, 0.4, 12)
+    GameText[2].updateTxt(String(timer))
     if (PauseTime == 0) {
       Pause = false
       PauseTime = PauseTimeDef
     }
   }
-  keybordGame(Pause)
-  moveText()
   //let ing = Math.atan2(Players[1].position.y - Players[0].position.y , Players[1].position.x - Players[0].position.x)
   //camera.rotation.z = ing
-  if (keys.k.pressed) {
+  if (keys.k.pressed || end == 1) {
     LeaveGame()
   }
   Players.forEach(player => {

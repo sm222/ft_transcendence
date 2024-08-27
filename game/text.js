@@ -36,7 +36,7 @@ export class Text {
 
   createTextMesh() {
     if (!this.font) {
-      console.error('Font not loaded yet');
+      //console.error('Font not loaded yet');
       return;
     }
 
