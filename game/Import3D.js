@@ -46,6 +46,7 @@ export class MODEL3D {
       }  
       this.Update()
     }
+//
     Update() {
       if (this.model) {
           this.model.position.set(
@@ -53,10 +54,9 @@ export class MODEL3D {
           this.position.y,
           this.position.z
         );
-        const vec3 = new THREE.Vector3(this.rotation.x, this.rotation.y, this.rotation.z)
-        this.model.rotation.x = vec3.x
-        this.model.rotation.y = vec3.y
-        this.model.rotation.z = vec3.z
+        this.model.rotation.x = this.rotation.x
+        this.model.rotation.y = this.rotation.y
+        this.model.rotation.z = this.rotation.z
       }
     }
     resize(size = []) {

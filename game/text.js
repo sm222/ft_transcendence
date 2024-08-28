@@ -22,7 +22,6 @@ export class Text {
     this.size = 0.5
     this.height = 0.1
     this.curveSegments = 12
-
     this.loadFont();
   }
 
@@ -72,10 +71,9 @@ export class Text {
         this.position.y,
         this.position.z + textDepth * 2
       );
-      const vec3 = new THREE.Vector3(this.rotation.x, this.rotation.y, this.rotation.z)
-      this.textMesh.rotation.x = vec3.x
-      this.textMesh.rotation.y = vec3.y
-      this.textMesh.rotation.z = vec3.z
+      this.textMesh.rotation.x = this.rotation.x
+      this.textMesh.rotation.y = this.rotation.y
+      this.textMesh.rotation.z = this.rotation.z
     }
   }
 
@@ -110,5 +108,6 @@ export class Text {
   }
   kill() {
     this.scene.remove(this.textMesh)
+    this.textMesh = null
   }
 }

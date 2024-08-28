@@ -12,7 +12,7 @@ export let output = []
 let MenuLight     = []
 let MenuObj       = []
 let MenuText      = []
-let custom        = []
+let Decord        = []
 let Loop          = 1
 let on            = false
 let menuChoice    = 3
@@ -45,15 +45,15 @@ function MoveArrow(x, y, z) {
 export function initMenu() {
   let i = 0
   for (let index = -30; index < 30; index += 10) {
-    custom[i++] = new MODEL3D(scene, {x:-10, y:-3, z:index}, [5,5,5])
+    Decord[i++] = new MODEL3D(scene, {x:-10, y:-3, z:index}, [5,5,5])
   }
   MenuText[0] = new Text(scene, {x:0, y:0, z:0}, 'Play', 'yellow')
   MenuText[0].rotate(0, 90, 0)
   MenuText[0].move(0.7, 3, 0.4)
-  MenuText[0].updateSize(1, 0.1, 12) // doto ask how to do that shit so it work :c
+  MenuText[0].updateSize(1, 0.1, 12)
   on = false
-  MenuLight[0] = new THREE.DirectionalLight(0xffffff, 1)
-  MenuLight[1] = new THREE.AmbientLight(0xffffff, 0.5)
+  MenuLight[0] = new THREE.DirectionalLight(0xffffff, 3)
+  MenuLight[1] = new THREE.AmbientLight(0xffffff, 0.7)
   MenuLight[0].position.y = 3
   MenuLight[0].position.z = 1
   MenuLight[0].castShadow = true
@@ -118,7 +118,7 @@ function LeaveMenu() {
   MenuText.forEach(txt => {
     txt.kill()
   })
-  custom.forEach(obj => {
+  Decord.forEach(obj => {
     obj.kill()
   })
 }
