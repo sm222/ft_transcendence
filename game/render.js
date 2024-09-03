@@ -14,6 +14,14 @@ export const renderer = new THREE.WebGLRenderer({
   antialias: true
 })
 
+window.addEventListener('resize', function( ) {
+  let newW = window.innerWidth
+  let newH = window.innerHeight
+  renderer.setSize(newW, newH)
+  camera.aspect = newW / newH
+  camera.updateProjectionMatrix()
+} )
+
 renderer.shadowMap.enabled = true
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)

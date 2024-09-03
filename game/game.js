@@ -8,7 +8,7 @@ import { ball } from './ball.js'
 import { MODEL3D } from './Import3D.js'
 
 const Second        = 60
-const FirstPause    = (Second * 5)
+const FirstPause    = (Second * 1)
 
 const PauseTimeDef  =  (Second * 3) // time in frame (asuming it run a 60fps) wait 3 sec
 const BestOf        =  5        // exp: 3, 2 round to win
@@ -161,14 +161,7 @@ export function initGame(gamesize,
     }})
   Ball.forEach(obj => {
     obj.setSpeed(BallSpeed, BallSpeed)
-    if (rand(2) === 1)
-      obj.velocity.x = 1
-    else
-    obj.velocity.x = -1
-    if (rand(2) === 1)
-      obj.velocity.z = 1
-    else
-      obj.velocity.z = -1
+    obj.angle = 45
     obj.setGameSize(gamesize)
     scene.add(obj)
   })
@@ -179,7 +172,7 @@ export function initGame(gamesize,
 
 function LeaveGame() {
   GameLoop = false
-  
+
   Players.forEach(player => {
     scene.remove(player)
     player.kill()
@@ -218,7 +211,7 @@ function score() {
   if (WinRound !== 0) {
     Pause = true
     console.log(Round)
-    Ball[0].setSpeed(BallSpeed, BallSpeed)
+    Ball[0].setSpeed(BallSpeed)
     if (WinRound > 0)
       ScoreValue[0]++
     else
@@ -289,7 +282,9 @@ function Gaming() {
   moveText()
   if (!Pause) {
     end = score()
-    //console.log(Ball[0].position)
+    //console.log(Ball[0].angle)
+    console.log(Ball[0].position)
+    //console.log(Ball[0].up_down)
   }
   else {
     var timer = 0
@@ -304,6 +299,9 @@ function Gaming() {
       GameTextScore.updateSize(2, 0.4, 12)
       GameTextScore.updateTxt(String(timer))
       if (PauseTime == 0) {
+        Ball.forEach(obj => {
+          obj.AngleToVelocity(rand(360))
+        })
         Pause = false
         PauseTime = PauseTimeDef
     }

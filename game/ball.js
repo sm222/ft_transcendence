@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import { Obj } from './obj.js'
 
+const _PI_ = 3.14159265358979323846
+
 export function boxCollision({ box1, box2 }) {
   const xCollision = box1.right >= box2.left && box1.left <= box2.right
   const yCollision = box1.bottom + box1.velocity.y <= box2.top && box1.top >= box2.bottom
@@ -60,6 +62,10 @@ export class ball extends Obj {
     this.gravity = -0.002
 
     this.zAcceleration = zAcceleration
+    this.angle = 0
+    this.up_down = true
+    this.L_R = false
+    this.speed = 1
   }
 
   updateSides() {
@@ -72,16 +78,15 @@ export class ball extends Obj {
     this.front = this.position.z + this.depth / 2
     this.back = this.position.z - this.depth / 2
   }
-
+  
   update() {
     this.updateSides()
-
-    this.position.x += this.velocity.x * this.speedX
-    this.position.z += this.velocity.z * this.speedZ
+    this.AngleToVelocity(this.angle)
+    this.position.x += this.velocity.x * this.speed
+    this.position.z += this.velocity.z * this.speed
   }
-  setSpeed(_x, _z) {
-    this.speedX = _x
-    this.speedZ = _z
+  setSpeed(_speed) {
+    this.speed = _speed
   }
   playerPoin() {
     let p = 0
@@ -92,15 +97,24 @@ export class ball extends Obj {
     }
     return p
   }
-
+  AngleToVelocity(angle) {
+    const res = [Math.sin(angle * (_PI_ /180.0)), Math.cos(angle * (_PI_ /180.0))]
+    this.velocity.x = res[0]
+    this.velocity.z = res[1]
+  }
+  setAngleOnHit(x ,y) {
+    const end = (y - x) + 90
+    //this.angle = end //((end > 0) ? (end > 360 ? end - 360 : end) : end)
+    this.angle = ((end > 0) ? (end > 360 ? end - 360 : end) : (end < 0 ? end + 360 : end))
+  }
   applyGravity(player) {
-    if (this.position.x >= this.gameSize) {
-      this.velocity.x = -1
-      this.position.x = this.gameSize
+    if (this.position.x >= this.gameSize && !this.L_R) {
+      this.setAngleOnHit(this.angle , -90)
+      this.L_R = !this.L_R
     }
-    else if (this.position.x <= (-this.gameSize)) {
-      this.velocity.x = 1
-      this.position.x = -this.gameSize
+    else if (this.position.x <= (-this.gameSize) && this.L_R) {
+      this.setAngleOnHit(this.angle , -90)
+      this.L_R = !this.L_R
     } 
     if (
       boxCollision({
@@ -108,23 +122,17 @@ export class ball extends Obj {
         box2: player
       })
     ) {
-      if (this.position.z > 0) {
-        this.velocity.z = -1
+      const influance = (player.velocity.x * 50)
+      if (player.position.z > this.position.z && this.up_down) {
+        this.setAngleOnHit(this.angle , 90)
+        this.up_down = !this.up_down;
       }
-      else {
-        this.velocity.z = 1
+      else if (player.position.z < this.position.z && !this.up_down) {
+        this.setAngleOnHit(this.angle , 90)
+        this.up_down = !this.up_down;
       }
-      if (player.velocity.x != 0) {
-        if (player.velocity.x > this.velocity.x)
-          this.velocity.x = -1
-        else
-          this.velocity.x = 1
-      }
-      const xDist = this.position.x - player.position.x
-      const zDist = this.position.z - player.position.z
-      const angle = Math.atan2(zDist, xDist) * 180 / Math.PI
-      console.log(angle)
-      //this.speedX = angle
+      console.log("this = ", this.angle + influance )
+      this.angle += (this.position.z > 0 ? -influance : influance) 
     }
   }
   setGameSize(size) {
@@ -134,6 +142,21 @@ export class ball extends Obj {
     super.kill()
   }
 }
+
+/*
+* const float r(const float x, const float y) {
+*   const float end = (( y - x ) + 90);
+*   return ((end > 0) ? (end > 360 ? end - 360 : end) : (end < -360 ? end + 360 : end));
+* }
+* 
+* Vector2 rotate(float angle) {
+*   return (Vector2){sin(angle * DEG2RAD), cos(angle * DEG2RAD)};
+* }
+
+*/
+
+
+
 
 //!    let posAvatar = new THREE.Vector3();
 //?    avatar.getWorldPosition(posAvatar);
