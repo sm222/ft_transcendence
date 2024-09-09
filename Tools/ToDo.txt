@@ -1,3 +1,5 @@
+Start with display (bootstrap) to make elements responsive.
+
 Understand how to fetch data from DB in real-time to display number of games played, other infos etc.
 
 Make a register/login button, exchanging informations with the DB, then changing to "Profile" button
@@ -13,5 +15,3 @@ Make the Game button
     1V1
     AI
     Tournament
-
-How to include the Leaderboard ?
