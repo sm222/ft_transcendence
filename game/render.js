@@ -15,8 +15,8 @@ export const renderer = new THREE.WebGLRenderer({
 })
 
 window.addEventListener('resize', function( ) {
-  let newW = window.innerWidth
-  let newH = window.innerHeight
+  const newW = window.innerWidth
+  const newH = window.innerHeight
   renderer.setSize(newW, newH)
   camera.aspect = newW / newH
   camera.updateProjectionMatrix()

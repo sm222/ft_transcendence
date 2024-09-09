@@ -101,20 +101,22 @@ export class ball extends Obj {
     const res = [Math.sin(angle * (_PI_ /180.0)), Math.cos(angle * (_PI_ /180.0))]
     this.velocity.x = res[0]
     this.velocity.z = res[1]
+    this.L_R =     this.velocity.x < 0;
+    this.up_down = this.velocity.z < 0;
+
   }
   setAngleOnHit(x ,y) {
     const end = (y - x) + 90
     //this.angle = end //((end > 0) ? (end > 360 ? end - 360 : end) : end)
     this.angle = ((end > 0) ? (end > 360 ? end - 360 : end) : (end < 0 ? end + 360 : end))
+    this.AngleToVelocity(this.angle)
   }
   applyGravity(player) {
     if (this.position.x >= this.gameSize && !this.L_R) {
       this.setAngleOnHit(this.angle , -90)
-      this.L_R = !this.L_R
     }
     else if (this.position.x <= (-this.gameSize) && this.L_R) {
       this.setAngleOnHit(this.angle , -90)
-      this.L_R = !this.L_R
     } 
     if (
       boxCollision({
@@ -123,16 +125,13 @@ export class ball extends Obj {
       })
     ) {
       const influance = (player.velocity.x * 50)
-      if (player.position.z > this.position.z && this.up_down) {
+      if (player.position.z > this.position.z && !this.up_down) {
         this.setAngleOnHit(this.angle , 90)
-        this.up_down = !this.up_down;
       }
-      else if (player.position.z < this.position.z && !this.up_down) {
+      else if (player.position.z < this.position.z && this.up_down) {
         this.setAngleOnHit(this.angle , 90)
-        this.up_down = !this.up_down;
       }
-      console.log("this = ", this.angle + influance )
-      this.angle += (this.position.z > 0 ? -influance : influance) 
+      this.angle += (influance)
     }
   }
   setGameSize(size) {

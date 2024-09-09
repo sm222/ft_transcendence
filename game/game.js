@@ -8,7 +8,7 @@ import { ball } from './ball.js'
 import { MODEL3D } from './Import3D.js'
 
 const Second        = 60
-const FirstPause    = (Second * 1)
+const FirstPause    = (Second * 5)
 
 const PauseTimeDef  =  (Second * 3) // time in frame (asuming it run a 60fps) wait 3 sec
 const BestOf        =  5        // exp: 3, 2 round to win
@@ -283,7 +283,8 @@ function Gaming() {
   if (!Pause) {
     end = score()
     //console.log(Ball[0].angle)
-    console.log(Ball[0].position)
+    //console.log()
+    console.log("LR>", Ball[0].L_R,  "| UP DOWM", Ball[0].up_down)
     //console.log(Ball[0].up_down)
   }
   else {
