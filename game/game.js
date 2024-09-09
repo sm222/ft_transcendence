@@ -1,24 +1,26 @@
 import * as THREE from 'three'
 import { Box } from './box.js'
-import { scene, camera, Draw } from './render.js'
+import { scene, camera, Draw, SetCamMode } from './render.js'
 import { keys } from './keybord.js'
-import { initMenu } from './menu.js'
 import { Text } from './text.js'
 import { ball } from './ball.js'
 import { MODEL3D } from './Import3D.js'
 
-const Second        = 60
-const FirstPause    = (Second * 5)
+const Second        =  60
+const FirstPause    =  (Second * 5)
 
 const PauseTimeDef  =  (Second * 3) // time in frame (asuming it run a 60fps) wait 3 sec
-const BestOf        =  5        // exp: 3, 2 round to win
+const BestOf        =  5            // exp: 3, 2 round to win
+
+const BallSpeedUp   =  (Second * 5)
+let   BallTimer     =  0
 
 let   Round         =  -1
 let   Pause         =  true
 let   PauseTime     =  FirstPause
 let   GameSize      =  15
 let   PlayerSpeed   =  0.15
-let   BallSpeed     =  0.04
+let   BallSpeed     =  0.07
 let   ScoreValue    =  []
 
 let   Players       =  []
@@ -33,6 +35,9 @@ let   GameText      =  []
 let   WinRound      =  0
 
 let   GameLoop      =  1
+
+var __Callback
+
 
 
 function rand(max) {
@@ -55,8 +60,10 @@ function makeTrees(gamesize) {
 
 export function initGame(gamesize, 
       p1Name , p1color, 
-      p2Name, p2color) {
+      p2Name, p2color,
+    CallBack ) {
   //
+  __Callback = CallBack
   makeTrees(gamesize)
   Round = -1
   GameLoop = 1
@@ -165,8 +172,6 @@ export function initGame(gamesize,
     obj.setGameSize(gamesize)
     scene.add(obj)
   })
-  console.log(camera.position)
-  console.log(camera.rotation)
   Gaming()
 }
 
@@ -282,15 +287,22 @@ function Gaming() {
   moveText()
   if (!Pause) {
     end = score()
+    if (BallTimer == BallSpeedUp) {
+      BallTimer = 0
+      Ball[0].speed += 0.01
+    }
+    BallTimer++
+    SetCamMode(true)
     //console.log(Ball[0].angle)
     //console.log()
-    console.log("LR>", Ball[0].L_R,  "| UP DOWM", Ball[0].up_down)
+    //console.log("LR>", Ball[0].L_R,  "| UP DOWM", Ball[0].up_down)
     //console.log(Ball[0].up_down)
   }
   else {
     var timer = 0
     PauseTime--
     if (Round === -1) {
+      SetCamMode(false)
       camera.position.set(Map[0].position.x / 2, Map[0].position.y + GameSize + (PauseTime / 2), Map[0].position.z / 2)
       camera.lookAt(Map[0].position)
       camera.rotateZ(PauseTime / 200)
@@ -323,7 +335,8 @@ function Gaming() {
     requestAnimationFrame(Gaming)
   }
   else {
-    initMenu()
+    // end of the game here
+    __Callback()
     return
   }
 }

@@ -101,6 +101,7 @@ export class ball extends Obj {
     const res = [Math.sin(angle * (_PI_ /180.0)), Math.cos(angle * (_PI_ /180.0))]
     this.velocity.x = res[0]
     this.velocity.z = res[1]
+    // set the side it need to check 
     this.L_R =     this.velocity.x < 0;
     this.up_down = this.velocity.z < 0;
 
@@ -108,7 +109,7 @@ export class ball extends Obj {
   setAngleOnHit(x ,y) {
     const end = (y - x) + 90
     //this.angle = end //((end > 0) ? (end > 360 ? end - 360 : end) : end)
-    this.angle = ((end > 0) ? (end > 360 ? end - 360 : end) : (end < 0 ? end + 360 : end))
+    this.angle = ((end > 0) ? (end > 360 ? end - 360 : end) : (end < 0 ? end + 360 : end)) // probably don't need that much
     this.AngleToVelocity(this.angle)
   }
   applyGravity(player) {
@@ -131,7 +132,8 @@ export class ball extends Obj {
       else if (player.position.z < this.position.z && this.up_down) {
         this.setAngleOnHit(this.angle , 90)
       }
-      this.angle += (influance)
+      //this.angle += (influance)
+      this.angle += (this.position.z > 0 ? -influance : influance) // need for the down padle
     }
   }
   setGameSize(size) {

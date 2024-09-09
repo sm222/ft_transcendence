@@ -27,6 +27,13 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 const controls = new OrbitControls(camera, renderer.domElement)
 
+
+export function SetCamMode(mode) {
+  controls.enableRotate = mode
+  controls.enablePan    = mode
+  controls.enableZoom   = mode
+}
+
 export function Draw() {
   renderer.render(scene, camera)
 }

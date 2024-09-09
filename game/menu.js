@@ -149,13 +149,14 @@ function MainMenu() {
       case 3:
         Loop = 0
         LeaveMenu()
-        initGame(10, 'bob', 'pink', 'mike', 'lightseagreen')
-        //        ^    ^       ^       ^       ^
-        // game size   |       |       |       |
-        //  player1 name       |       |       |
-        //         player1 color       |       |
-        //                  player2 name       |
-        //                         player2 color
+        initGame(10, 'bob', 'pink', 'mike', 'lightseagreen', initMenu)
+        //        ^    ^       ^       ^       ^             ^
+        // game size   |       |       |       |             |
+        //  player1 name       |       |       |             |
+        //         player1 color       |       |             |
+        //                  player2 name       |             |
+        //                         player2 color             |
+        //                 what is call at the end of the game
         break;
       default:
         break;
