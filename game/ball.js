@@ -101,6 +101,8 @@ export class ball extends Obj {
     const res = [Math.sin(angle * (_PI_ /180.0)), Math.cos(angle * (_PI_ /180.0))]
     this.velocity.x = res[0]
     this.velocity.z = res[1]
+    if (this.velocity.x == 0)
+      this.velocity.x = 1
     // set the side it need to check 
     this.L_R =     this.velocity.x < 0;
     this.up_down = this.velocity.z < 0;

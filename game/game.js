@@ -217,6 +217,7 @@ function score() {
     Pause = true
     console.log(Round)
     Ball[0].setSpeed(BallSpeed)
+    Ball[0].AngleToVelocity(rand(360))
     if (WinRound > 0)
       ScoreValue[0]++
     else
@@ -307,14 +308,13 @@ function Gaming() {
       camera.lookAt(Map[0].position)
       camera.rotateZ(PauseTime / 200)
       camera.rotateY(PauseTime / 200)
+      //controls.saveState()
+
     }
     for (let index = PauseTime; index > 0; index -= 60) { timer++ }
       GameTextScore.updateSize(2, 0.4, 12)
       GameTextScore.updateTxt(String(timer))
       if (PauseTime == 0) {
-        Ball.forEach(obj => {
-          obj.AngleToVelocity(rand(360))
-        })
         Pause = false
         PauseTime = PauseTimeDef
     }

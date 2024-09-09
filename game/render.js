@@ -25,13 +25,15 @@ window.addEventListener('resize', function( ) {
 renderer.shadowMap.enabled = true
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
-const controls = new OrbitControls(camera, renderer.domElement)
+export const controls = new OrbitControls(camera, renderer.domElement)
 
 
 export function SetCamMode(mode) {
   controls.enableRotate = mode
   controls.enablePan    = mode
   controls.enableZoom   = mode
+  //if (mode)
+  //  controls.reset()
 }
 
 export function Draw() {
