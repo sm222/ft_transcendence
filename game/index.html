@@ -12,11 +12,11 @@
     
     <style>
       .container-game {
-          height: 100vh;
+          height: 70vh;
           display: flex;
-          align-items: center; /* Aligns to the top of the window */
-          justify-content: center; /* Centers horizontally */
-          box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
       }
   </style>
 
@@ -37,9 +37,9 @@
 
     <!--Header. Name of the project. Always full width, never hidden-->
     <div class="container-fluid p-3 text-center bg-success text-light">
-      <h1>Transcendence</h1>
+        <h1>Transcendence</h1>
     </div>
-    <!--Button and stats. Right under the header. If too small, hover button over header. Start and end until too big.-->
+      <!--Button and stats. Right under the header. If too small, hover button over header. Start and end until too big.-->
     <div class="container-sm">
       <div class="row align-items-baseline">
         <div class="col mb-2 text-start">Some stats</div>
@@ -48,18 +48,18 @@
         </div>
       </div>
     </div>
+
     <!--Game. Resizes when possible. Same as button and stats when too big (but remains square). When too small, shows "expand to play"-->
-    <!--<div class="container-fluid" style="position: relative">-->
-      <div class="container-sm">
-        <div class="container-game">
-          <div class="container-fluid bg-dark text-light">This is going to be the game</div>
-        </div>
-      </div>
-        <!--</div>-->
-      <!--Needs to be centered on the page-->
+    <div class="container-sm">
+      <div class="container-game">
+        <div class="container-fluid bg-dark text-light">This is going to be the game</div>
+    </div>
+  </div>
     
     <!--Game stats (Leaderboard). Same as button and start when too big. Disapears when too small (When game cannot be displayed.)
     Needs to be at the bottom of the page-->
+      <div class="container-sm">This is gonna be the leaderboard !</div>
+      </div>  
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>
