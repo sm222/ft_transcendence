@@ -5,6 +5,7 @@ import { keys } from './keybord.js'
 import { Text } from './text.js'
 import { ball } from './ball.js'
 import { MODEL3D } from './Import3D.js'
+import { endScore, PlayersName, PlayersColor, TimePlayMs, TimePlaySegond } from './endGame.js'
 
 const Second        =  60
 const FirstPause    =  (Second * 5)
@@ -23,6 +24,7 @@ let   PlayerSpeed   =  0.15
 let   BallSpeed     =  0.07
 let   ScoreValue    =  []
 
+let   PlayersNames  =  []
 let   Players       =  []
 let   Map           =  []
 let   Ball          =  []
@@ -39,6 +41,7 @@ let   GameLoop      =  1
 var __Callback
 
 
+let   endCamX       =  0
 
 function rand(max) {
   return Math.floor(Math.random() * max)
@@ -63,8 +66,18 @@ export function initGame(gamesize,
       p2Name, p2color,
     CallBack ) {
   //
+  PlayersName[0] = p1Name
+  PlayersName[1] = p2Name
+  PlayersColor[0] = p1color
+  PlayersColor[1] = p2color
   __Callback = CallBack
+  //
+  endCamX = 0
+  TimePlaySegond[0] = 0
+  TimePlayMs[0] = 0
   makeTrees(gamesize)
+  PlayersNames[0] = p1Name
+  PlayersNames[0] = p2Name
   Round = -1
   GameLoop = 1
   PauseTime = FirstPause
@@ -124,7 +137,6 @@ export function initGame(gamesize,
   Light[0] = new THREE.DirectionalLight(0xffffff, 2)
   Light[0].position.y = 3
   Light[0].position.z = 1
-  Light[0].castShadow = true
   Amlight = new THREE.AmbientLight(0xffffff, 10)
   //
   Light.forEach(light => {
@@ -177,7 +189,6 @@ export function initGame(gamesize,
 
 function LeaveGame() {
   GameLoop = false
-
   Players.forEach(player => {
     scene.remove(player)
     player.kill()
@@ -226,8 +237,12 @@ function score() {
   }
   GameTextScore.updateSize(2, 0.4, 12)
   GameTextScore.updateTxt(String(ScoreValue[0] + '\n' + ScoreValue[1]))
-  if (ScoreValue[0] >= BestOf / 2 || ScoreValue[1] >= BestOf / 2)
-    return 1
+  if (ScoreValue[0] >= BestOf / 2 || ScoreValue[1] >= BestOf / 2) {
+    endScore[0] = ScoreValue[0]
+    endScore[1] = ScoreValue[1]
+    GameLoop = 2
+    return 2
+  }
   return 0
 }
 
@@ -286,20 +301,25 @@ function Gaming() {
   let end = 0
   keybordGame(Pause)
   moveText()
-  if (!Pause) {
+  if (!Pause && GameLoop != 2) {
     end = score()
     if (BallTimer == BallSpeedUp) {
       BallTimer = 0
       Ball[0].speed += 0.01
     }
     BallTimer++
+    TimePlayMs[0]++
+    if (TimePlayMs == 60) {
+      TimePlayMs[0] = 0
+      TimePlaySegond[0]++
+    }
     SetCamMode(true)
     //console.log(Ball[0].angle)
     //console.log()
     //console.log("LR>", Ball[0].L_R,  "| UP DOWM", Ball[0].up_down)
     //console.log(Ball[0].up_down)
   }
-  else {
+  else if (GameLoop != 2) {
     var timer = 0
     PauseTime--
     if (Round === -1) {
@@ -309,7 +329,6 @@ function Gaming() {
       camera.rotateZ(PauseTime / 200)
       camera.rotateY(PauseTime / 200)
       //controls.saveState()
-
     }
     for (let index = PauseTime; index > 0; index -= 60) { timer++ }
       GameTextScore.updateSize(2, 0.4, 12)
@@ -321,22 +340,31 @@ function Gaming() {
   }
   //let ing = Math.atan2(Players[1].position.y - Players[0].position.y , Players[1].position.x - Players[0].position.x)
   //camera.rotation.z = ing
-  if (keys.k.pressed || end == 1) {
-    LeaveGame()
-  }
-  if (keys.space.pressed) {
-    moveTrees(10)
-  }
+  if (keys.k.pressed || end == 1) { LeaveGame() }
+  if (keys.space.pressed) { moveTrees(10) }
+
   Players.forEach(player => {
     player.velocity.x = 0
   })
+  if (GameLoop == 2) {
+    SetCamMode(false)
+    camera.position.y += 1
+    camera.rotateX(endCamX / 200)
+    endCamX += 0.05
+    console.log(endCamX)
+    if (endCamX > 5) {
+      console.log(camera.position)
+      GameLoop = 0
+      LeaveGame()
+    }
+  }
   if (GameLoop) {
     Draw()
     requestAnimationFrame(Gaming)
   }
   else {
     // end of the game here
-    __Callback()
+    __Callback(ScoreValue, PlayersNames, null, TimePlaySegond, TimePlayMs)
     return
   }
 }

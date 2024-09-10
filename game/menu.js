@@ -5,6 +5,7 @@ import { keys } from './keybord.js'
 import { initGame } from './game.js'
 import { Text } from './text.js'
 import { MODEL3D } from './Import3D.js'
+import { initEndGame } from './endGame.js'
 
 
 
@@ -149,7 +150,7 @@ function MainMenu() {
       case 3:
         Loop = 0
         LeaveMenu()
-        initGame(10, 'bob', 'pink', 'mike', 'lightseagreen', initMenu)
+        initGame(10, 'bob', 'pink', 'mike', 'lightseagreen', initEndGame)
         //        ^    ^       ^       ^       ^             ^
         // game size   |       |       |       |             |
         //  player1 name       |       |       |             |
