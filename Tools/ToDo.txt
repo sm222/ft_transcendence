@@ -1,4 +1,5 @@
-Start with display (bootstrap) to make elements responsive.
+
+Change the color palette
 
 Understand how to fetch data from DB in real-time to display number of games played, other infos etc.
 
