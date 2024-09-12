@@ -73,11 +73,12 @@
           </div>
           <!--Body-->
           <div class="modal-body background-light">
-            <form>
+            <form method="post" action="{% url 'login' %}"> <!--DJANGO-->
+              {% csrf_token %}
               <div class="mb-3">
-                <label for="loginEmail" class="form-label">Addresse e-mail</label>
-                <input type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">Votre e-mail ne sera utilisée que pour vous identifier.</div>
+                <label for="loginEmail" class="form-label">Adresse e-mail</label>
+                <input type="email" class="form-control" id="loginEmail" aria-describedby="emailInfo">
+                <div id="emailInfo" class="form-text">Votre adresse e-mail ne sera utilisée que pour vous identifier.</div>
               </div>
               <div class="mb-3">
                 <label for="loginPassword" class="form-label">Entrez votre mot de passe</label>
