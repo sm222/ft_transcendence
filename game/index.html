@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   
   <head>
     <title>Transcendence</title>
@@ -45,33 +45,64 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   
   </head>
-  <body class="container-fluid background-light">
 
     <!--Header. Name of the project. Always full width, never hidden-->
-    <div class="container-fluid p-3 text-center background-green text-brown">
+    <div class="container-fluid">
+      <div class="row p-3 text-center background-green text-brown">
         <h1>Transcendence</h1>
-    </div>
-      <!--Button and stats. Right under the header. If too small, hover button over header. Start and end until too big.-->
-    <div class="container-sm background-light">
-      <div class="row align-items-baseline background-brown text-light">
-        <div class="col mb-2 text-start">Some stats</div>
+      </div>
+    <!--Button and stats. Right under the header. If too small, hover button over header. Start and end until too big.-->
+    <div class="container-sm">
+      <div class="row align-items-baseline background-light">
+        <div class="col mb-2 text-brown text-start">Statistiques</div>
         <div class="col text-end">
-          <button type=button class="btn btn-success">Login/Register</button>
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#loginRegister">Connexion/Inscription</button>
         </div>
       </div>
     </div>
-
-    <!--Game. Resizes when possible. Same as button and stats when too big (but remains square). When too small, shows "expand to play"-->
-    <div class="container-sm">
-      <div class="container-game">
-        <div class="container-fluid bg-dark text-light">This is going to be the game</div>
+    
+    <!--Modal for login/Register form-->
+    <div class="modal fade" id="loginRegister" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <!--Header-->
+          <div class="modal-header background-green">
+            <div class="modal-title text-center" id="loginRegisterModalTitle">Connexion</div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <!--Body-->
+          <div class="modal-body background-light">
+            <form>
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Addresse e-mail</label>
+                <input type="email" class="form-control" id="loginEmail" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">Votre e-mail ne sera utilisée que pour vous identifier.</div>
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Entrez votre mot de passe</label>
+                <input type="password" class="form-control" id="loginPassword">
+              </div>
+            </form>
+              <!--Login fields + "Don't have an account? Register"-->
+            </div>
+          <!--Footer-->
+          <div class="modal-footer">
+            footer
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+      <!--Game. Resizes when possible. Same as button and stats when too big (but remains square). When too small, shows "expand to play"-->
+    <!--Must be centered horizontally on the page. It must be a square stretching from the header to the leaderboard.It should have some margins.--> 
+    <div class="container-sm background-brown position-relative">
+      <div class="container-game"></div>
+    </div>
     
     <!--Game stats (Leaderboard). Same as button and start when too big. Disapears when too small (When game cannot be displayed.)
     Needs to be at the bottom of the page-->
-      <div class="container-sm">This is gonna be the leaderboard !</div>
-      </div>  
+    <div class="container-sm">This is gonna be the leaderboard !</div>
+  </div>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>

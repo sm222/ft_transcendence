@@ -1,9 +1,8 @@
 
-Change the color palette
-
 Understand how to fetch data from DB in real-time to display number of games played, other infos etc.
 
 Make a register/login button, exchanging informations with the DB, then changing to "Profile" button
+    Use a modal to accept user input
     Login - Does the user exist ? Are they already logged in ? Is the password ok ?
     Register - Does the user exist ? Is the password safe ?
 
@@ -16,3 +15,7 @@ Make the Game button
     1V1
     AI
     Tournament
+
+Implement 2FA
+
+**Game might go behind header rn.
