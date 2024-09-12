@@ -56,18 +56,19 @@
       <div class="row align-items-baseline background-light">
         <div class="col mb-2 text-brown text-start">Statistiques</div>
         <div class="col text-end">
-          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#loginRegister">Connexion/Inscription</button>
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#loginModal">Connexion</button>
+          <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#registerModal">Inscription</button>          
         </div>
       </div>
     </div>
     
-    <!--Modal for login/Register form-->
-    <div class="modal fade" id="loginRegister" tabindex="-1" role="dialog" aria-hidden="true">
+    <!--Login form-->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
+        <div class="modal-content background-green">
           <!--Header-->
           <div class="modal-header background-green">
-            <div class="modal-title text-center" id="loginRegisterModalTitle">Connexion</div>
+            <div class="modal-title text-center" id="loginModalTitle">Connexion</div>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             </button>
           </div>
@@ -85,11 +86,43 @@
                 <input type="password" class="form-control" id="loginPassword">
               </div>
             </form>
-              <!--Login fields + "Don't have an account? Register"-->
-            </div>
+          </div>
           <!--Footer-->
-          <div class="modal-footer">
-            footer
+          <footer class="modal-footer justify-content-center">
+            <button type="submit" class="btn btn-success">Se connecter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Register form-->
+    <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content background-green">
+          <!--Header-->
+          <div class="modal-header background-green">
+            <div class="modal-title text-center" id="registerModalTitle">Inscription</div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+          <!--Body-->
+          <div class="modal-body background-light">
+            <form method="post" action="{% url 'login' %}"> <!--DJANGO-->
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Adresse e-mail</label>
+                <input type="email" class="form-control" id="loginEmail" aria-describedby="emailInfo">
+                <div id="emailInfo" class="form-text">Votre adresse e-mail ne sera utilisée que pour vous identifier.</div>
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Entrez votre mot de passe</label>
+                <input type="password" class="form-control" id="loginPassword">
+              </div>
+            </form>
+          </div>
+          <!--Footer-->
+          <footer class="modal-footer justify-content-center">
+            <button type="submit" class="btn btn-success">S'inscrire</button>
           </div>
         </div>
       </div>
