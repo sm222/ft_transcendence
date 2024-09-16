@@ -2,20 +2,16 @@ import * as THREE from 'three'
 import { Box } from './box.js'
 import { ball } from './ball.js'
 import { scene, camera, Draw, SetCamMode } from './render.js'
+import { gamedata } from './main.js'
 import { keys } from './keybord.js'
 import { Text } from './text.js'
 import { MODEL3D } from './Import3D.js'
 
-const Second          =  60
-const TimerDef        =  (Second * 5)
-let   Wait            =  0
+const  Second    =  60
+const  TimerDef        =  (Second * 5)
+let    Wait            =  0
 
-export let   endScore        =  [] // js is such a shit show i hate it
-export let   PlayersName     =  [] // js is such a shit show i hate it
-export let   PlayersColor    =  [] // js is such a shit show i hate it
-//                     only use [0]
-export let   TimePlaySegond  =  [] // js is such a shit show i hate it
-export let   TimePlayMs      =  [] // js is such a shit show i hate it
+export let   endScore  =  [] // js is such a shit show i hate it
 
 let   Texts            =  []
 
@@ -29,12 +25,7 @@ let   Loop             =  true
 let   CamX             =  5
 
 
-export function initEndGame(
-    _endScore,
-    _PlayersName,
-    _PlayersColor,
-    _TimePlaySegond,
-    _TimePlayMs)
+export function initEndGame()
   {
     //
     camera.position.set(0, 109 ,0)
@@ -67,7 +58,7 @@ export function initEndGame(
     camera.lookAt(Maps[0].position)
     Loop = true
     //
-    Texts[0] = new Text(scene, {x:0,y:8,z:0}, String(TimePlaySegond[0] + ":" +  TimePlayMs[0]), 'blue')
+    Texts[0] = new Text(scene, {x:0,y:8,z:0}, String(gamedata.getTime()), 'blue')
     Texts[0].rotate(-90,0,0)
     camera.rotateX(CamX)
     EndGameLoop()

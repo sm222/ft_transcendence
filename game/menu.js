@@ -5,18 +5,16 @@ import { keys } from './keybord.js'
 import { initGame } from './game.js'
 import { Text } from './text.js'
 import { MODEL3D } from './Import3D.js'
-import { initEndGame } from './endGame.js'
 
 
-
-export let output = []
-let MenuLight     = []
-let MenuObj       = []
-let MenuText      = []
-let Decord        = []
-let Loop          = 1
-let on            = false
-let menuChoice    = 3
+export let output =  []
+let MenuLight     =  []
+let MenuObj       =  []
+let MenuText      =  []
+let Decord        =  []
+let Loop          =  1
+let on            =  false
+let menuChoice    =  3
 
 function AddButton(p, layer) {
   MenuObj[layer] = new Box({
@@ -149,23 +147,19 @@ function MainMenu() {
     switch (menuChoice) {
       case 3:
         Loop = 0
-        LeaveMenu()
-        initGame(10, 'bob', 'pink', 'mike', 'lightseagreen', initEndGame)
-        //        ^    ^       ^       ^       ^             ^
-        // game size   |       |       |       |             |
-        //  player1 name       |       |       |             |
-        //         player1 color       |       |             |
-        //                  player2 name       |             |
-        //                         player2 color             |
-        //                 what is call at the end of the game
+        initGame(10)
+        //        ^ 
+        // game size
         break;
-      default:
-        break;
+        default:
+          break;
+        }
       }
-    }
-    camera.lookAt(MenuObj[0].position)
-    if (Loop) {
-      Draw()
-      requestAnimationFrame(MainMenu)
+      camera.lookAt(MenuObj[0].position)
+      if (Loop) {
+        Draw()
+        requestAnimationFrame(MainMenu)
+      } else {
+        LeaveMenu()
     }
 }

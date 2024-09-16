@@ -1,11 +1,13 @@
 import * as THREE from 'three'
 import { Box } from './box.js'
 import { scene, camera, Draw, SetCamMode } from './render.js'
-import { keys } from './keybord.js'
-import { Text } from './text.js'
-import { ball } from './ball.js'
-import { MODEL3D } from './Import3D.js'
-import { endScore, PlayersName, PlayersColor, TimePlayMs, TimePlaySegond } from './endGame.js'
+import { keys } from     './keybord.js'
+import { Text } from     './text.js'
+import { ball } from     './ball.js'
+import { MODEL3D } from  './Import3D.js'
+import { endScore} from  './endGame.js'
+import { gamedata } from './main.js'
+import { initEndGame } from './endGame.js'
 
 const Second        =  60
 const FirstPause    =  (Second * 5)
@@ -24,7 +26,6 @@ let   PlayerSpeed   =  0.15
 let   BallSpeed     =  0.07
 let   ScoreValue    =  []
 
-let   PlayersNames  =  []
 let   Players       =  []
 let   Map           =  []
 let   Ball          =  []
@@ -37,9 +38,6 @@ let   GameText      =  []
 let   WinRound      =  0
 
 let   GameLoop      =  1
-
-var __Callback
-
 
 let   endCamX       =  0
 
@@ -61,23 +59,11 @@ function makeTrees(gamesize) {
   }
 }
 
-export function initGame(gamesize, 
-      p1Name , p1color, 
-      p2Name, p2color,
-    CallBack ) {
-  //
-  PlayersName[0] = p1Name
-  PlayersName[1] = p2Name
-  PlayersColor[0] = p1color
-  PlayersColor[1] = p2color
-  __Callback = CallBack
-  //
+export function initGame(gamesize) {
+  gamedata.resetTime()
+  gamedata.setEndGame(initEndGame)
   endCamX = 0
-  TimePlaySegond[0] = 0
-  TimePlayMs[0] = 0
   makeTrees(gamesize)
-  PlayersNames[0] = p1Name
-  PlayersNames[0] = p2Name
   Round = -1
   GameLoop = 1
   PauseTime = FirstPause
@@ -105,6 +91,7 @@ export function initGame(gamesize,
     width: 2,
     height: 0.4,
     depth: 0.4,
+    color: gamedata.getPlayerColor(0),
     velocity: {
       x: 0,
       y: -0.01,
@@ -121,7 +108,7 @@ export function initGame(gamesize,
     width: 2,
     height: 0.4,
     depth: 0.3,
-    color: 'red',
+    color: gamedata.getPlayerColor(1),
     velocity: {
       x: 0,
       y: -0.01,
@@ -156,8 +143,8 @@ export function initGame(gamesize,
   camera.position.set(Map[0].position.x / 2, Map[0].position.y + GameSize, Map[0].position.z / 2)
   camera.lookAt(Map[0].position)
   // name
-  GameText[0] = new Text(scene, {x:0,y:0,z:0}, p1Name, p1color)
-  GameText[1] = new Text(scene, {x:0,y:0,z:0}, p2Name, p2color)
+  GameText[0] = new Text(scene, {x:0,y:0,z:0}, gamedata.getName(0) , gamedata.getPlayerNameColor(0))
+  GameText[1] = new Text(scene, {x:0,y:0,z:0}, gamedata.getName(1) , gamedata.getPlayerNameColor(1))
   GameText[0].rotate(-90,0,0)
   GameText[1].rotate(-90,0,0)
   GameTextScore = new Text(scene, {x:0,y:-4,z:-1.5}, '0:0', 'yellow')
@@ -308,11 +295,7 @@ function Gaming() {
       Ball[0].speed += 0.01
     }
     BallTimer++
-    TimePlayMs[0]++
-    if (TimePlayMs == 60) {
-      TimePlayMs[0] = 0
-      TimePlaySegond[0]++
-    }
+    gamedata.TickTime()
     SetCamMode(true)
     //console.log(Ball[0].angle)
     //console.log()
@@ -364,7 +347,9 @@ function Gaming() {
   }
   else {
     // end of the game here
-    __Callback(ScoreValue, PlayersNames, null, TimePlaySegond, TimePlayMs)
+    const ft = gamedata.getEndGame()
+    gamedata.setEndScore(ScoreValue)
+    ft()
     return
   }
 }
