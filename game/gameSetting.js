@@ -3,20 +3,36 @@ const Second  =  60
 
 export class GameData {
   constructor(
-    _PlayerNames      = ['mike', 'bob'],
-    _PlayerColors     = ['green', 'red'],
-    _PlayerColorsName = ['pink', 'lightseagreen'],
-    _EndCall          = null,
-    _EndScore         = [0,0,0,0],
-    _Times            = [0, 0, 0]
+    _PlayerNames      =    ['mike' , 'bob'],
+    _PlayerColors     =    ['green', 'red'],
+    _PlayerColorsName =    ['pink' , 'lightseagreen'],
+    _EndCall          =    null,
+    _CallBack         =    null,
+    _EndScore         =    [0,0,0,0],
+    _Times            =    [0, 0, 0],
+    _PlayersNumber    =    2
   ) {
     this._PlayerNames      =  _PlayerNames
     this._PlayerColors     =  _PlayerColors
     this._PlayerColorsName =  _PlayerColorsName
     this._EndCall          =  _EndCall
+    this._CallBack         =  _CallBack
     this._EndScore         =  _EndScore
     this._Times            =  _Times
+    // 
+    this._PlayersNumber    =  _PlayersNumber
+    // 
   }
+  //* CallBack
+  setCallBack(ft) {
+    this._CallBack = ft
+  }
+  getCallBack() {
+    return this._CallBack
+  }
+
+  //* Gamemod
+
   //* times
   resetTime() {
     this._Times = [0, 0, 0]

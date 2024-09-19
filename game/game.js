@@ -1,12 +1,12 @@
 import * as THREE from 'three'
-import { Box } from './box.js'
 import { scene, camera, Draw, SetCamMode } from './render.js'
-import { keys } from     './keybord.js'
-import { Text } from     './text.js'
-import { ball } from     './ball.js'
-import { MODEL3D } from  './Import3D.js'
-import { endScore} from  './endGame.js'
-import { gamedata } from './main.js'
+import { Box } from         './box.js'
+import { keys } from        './keybord.js'
+import { Text } from        './text.js'
+import { ball } from        './ball.js'
+import { MODEL3D } from     './Import3D.js'
+import { endScore} from     './endGame.js'
+import { gamedata } from    './main.js'
 import { initEndGame } from './endGame.js'
 
 const Second        =  60
@@ -323,9 +323,8 @@ function Gaming() {
   }
   //let ing = Math.atan2(Players[1].position.y - Players[0].position.y , Players[1].position.x - Players[0].position.x)
   //camera.rotation.z = ing
-  if (keys.k.pressed || end == 1) { LeaveGame() }
+  if (keys.k.pressed || end == 1 ) { LeaveGame() }
   if (keys.space.pressed) { moveTrees(10) }
-
   Players.forEach(player => {
     player.velocity.x = 0
   })
@@ -334,9 +333,7 @@ function Gaming() {
     camera.position.y += 1
     camera.rotateX(endCamX / 200)
     endCamX += 0.05
-    console.log(endCamX)
     if (endCamX > 5) {
-      console.log(camera.position)
       GameLoop = 0
       LeaveGame()
     }
@@ -353,6 +350,3 @@ function Gaming() {
     return
   }
 }
-
-
-// > call menu here

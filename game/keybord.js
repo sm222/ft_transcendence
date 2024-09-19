@@ -16,6 +16,9 @@ export const keys = {
   },
   k: {
     pressed: false
+  },
+  Enter: {
+    pressed: false
   }
 }
 
@@ -40,6 +43,8 @@ export function KeyBordinput() {
   case 'KeyK':
     keys.k.pressed = true
     break
+  case 'Enter':
+      keys.Enter.pressed = true
     }
   })
   //
@@ -63,6 +68,8 @@ export function KeyBordinput() {
       case 'KeyK':
         keys.k.pressed = false
         break
+      case 'Enter':
+        keys.Enter.pressed = false
       }
   })
 }

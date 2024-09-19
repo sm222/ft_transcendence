@@ -127,15 +127,16 @@ export class ball extends Obj {
         box2: player
       })
     ) {
-      const influance = (player.velocity.x * 50)
-      if (player.position.z > this.position.z && !this.up_down) {
-        this.setAngleOnHit(this.angle , 90)
-      }
-      else if (player.position.z < this.position.z && this.up_down) {
-        this.setAngleOnHit(this.angle , 90)
-      }
-      //this.angle += (influance)
-      this.angle += (this.position.z > 0 ? -influance : influance) // need for the down padle
+      const influance = (player.velocity.x * 20)
+      console.log(influance)
+      if      (player.position.z > this.position.z && !this.up_down) { this.setAngleOnHit(this.angle , 90) }
+      else if (player.position.z < this.position.z &&  this.up_down) { this.setAngleOnHit(this.angle , 90) }
+      const resInflu = (player.position.z > 0 ? -influance : influance) // need for the down padle
+      if (resInflu + this.angle != 0) //! could be a fix
+        this.angle += resInflu
+      this.AngleToVelocity(this.angle)
+      //? console.log(this.velocity)
+      //? console.log(this.angle)
     }
   }
   setGameSize(size) {

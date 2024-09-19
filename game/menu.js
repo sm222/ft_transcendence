@@ -5,6 +5,7 @@ import { keys } from './keybord.js'
 import { initGame } from './game.js'
 import { Text } from './text.js'
 import { MODEL3D } from './Import3D.js'
+import { gamedata } from './main.js'
 
 
 export let output =  []
@@ -43,6 +44,7 @@ function MoveArrow(x, y, z) {
 
 export function initMenu() {
   let i = 0
+  gamedata.setCallBack(initMenu)
   for (let index = -30; index < 30; index += 10) {
     Decord[i++] = new MODEL3D(scene, {x:-10, y:-3, z:index}, [5,5,5])
   }
@@ -143,12 +145,13 @@ function MenuInput() {
 
 function MainMenu() {
   MenuInput()
-  if (keys.space.pressed) {
+  if (keys.Enter.pressed) {
     switch (menuChoice) {
       case 3:
         Loop = 0
+        // min 7 | 20 max to make it playable / def 10
         initGame(10)
-        //        ^ 
+        //        ^
         // game size
         break;
         default:
