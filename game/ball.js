@@ -80,7 +80,6 @@ export class ball extends Obj {
   }
   
   update() {
-    this.updateSides()
     this.AngleToVelocity(this.angle)
     this.position.x += this.velocity.x * this.speed
     this.position.z += this.velocity.z * this.speed
@@ -90,7 +89,8 @@ export class ball extends Obj {
   }
   playerPoin() {
     let p = 0
-    if (this.position.z < -this.gameSize * 2 || this.position.z > this.gameSize * 2) {
+    const dis = 1
+    if (this.position.z < -this.gameSize * dis || this.position.z > this.gameSize * dis) {
       p = Number(this.position.z)
       this.position.z = 0
       this.position.x = 0
@@ -115,6 +115,7 @@ export class ball extends Obj {
     this.AngleToVelocity(this.angle)
   }
   applyGravity(player) {
+    this.updateSides()
     if (this.position.x >= this.gameSize && !this.L_R) {
       this.setAngleOnHit(this.angle , -90)
     }
@@ -128,11 +129,11 @@ export class ball extends Obj {
       })
     ) {
       const influance = (player.velocity.x * 20)
-      console.log(influance)
       if      (player.position.z > this.position.z && !this.up_down) { this.setAngleOnHit(this.angle , 90) }
       else if (player.position.z < this.position.z &&  this.up_down) { this.setAngleOnHit(this.angle , 90) }
       const resInflu = (player.position.z > 0 ? -influance : influance) // need for the down padle
-      if (resInflu + this.angle != 0) //! could be a fix
+      console.log(resInflu + this.angle)
+      if (resInflu + this.angle != 90 || resInflu + this.angle != 270) //! could be a fix
         this.angle += resInflu
       this.AngleToVelocity(this.angle)
       //? console.log(this.velocity)

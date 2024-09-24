@@ -107,7 +107,7 @@ export function initMenu() {
   MainMenu()
 }
 
-function LeaveMenu() {
+async function LeaveMenu() {
   MenuLight.forEach(light => {
     scene.remove(light)
     light.dispose()
@@ -143,14 +143,14 @@ function MenuInput() {
     on = false
 }
 
-function MainMenu() {
+async function MainMenu() {
   MenuInput()
   if (keys.Enter.pressed) {
     switch (menuChoice) {
       case 3:
         Loop = 0
         // min 7 | 20 max to make it playable / def 10
-        initGame(10)
+        await initGame(10)
         //        ^
         // game size
         break;
@@ -163,6 +163,6 @@ function MainMenu() {
         Draw()
         requestAnimationFrame(MainMenu)
       } else {
-        LeaveMenu()
+        await LeaveMenu()
     }
 }

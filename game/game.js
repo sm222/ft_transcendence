@@ -23,7 +23,7 @@ let   Pause         =  true
 let   PauseTime     =  FirstPause
 let   GameSize      =  15
 let   PlayerSpeed   =  0.15
-let   BallSpeed     =  0.07
+let   BallSpeed     =  0.09
 let   ScoreValue    =  []
 
 let   Players       =  []
@@ -46,24 +46,28 @@ function rand(max) {
 }
 
 
-function makeTrees(gamesize) {
+async function makeTrees(gamesize) {
   let k = 0
   for (let i = -gamesize; i < gamesize; i++) {
     for (let j = -gamesize; j < gamesize; j++) {
       const newI = i * rand(10)
       const newJ = j * rand(10)
       if ((newI < -gamesize || newI > gamesize) || (newJ < -gamesize || newJ > gamesize)) {
-        Trees[k++] = new MODEL3D(scene, {x:newI , y:-3, z:newJ}, [5,rand(5) + 5 ,5])
+        Trees[k] = new MODEL3D(scene, {x:newI , y:-3, z:newJ}, [5,rand(5) + 5 ,5])
+        const mid = 10
+        const v = rand(mid * 2)
+        Trees[k].rotate( v >= mid ? -v + mid : v, 0 , v >= mid ? -v + mid : v)
+        k++
       }
     }
   }
 }
 
-export function initGame(gamesize) {
+export async function initGame(gamesize) {
   gamedata.resetTime()
   gamedata.setEndGame(initEndGame)
   endCamX = 0
-  makeTrees(gamesize)
+  await makeTrees(gamesize)
   Round = -1
   GameLoop = 1
   PauseTime = FirstPause
@@ -167,14 +171,14 @@ export function initGame(gamesize) {
     }})
   Ball.forEach(obj => {
     obj.setSpeed(BallSpeed, BallSpeed)
-    obj.angle = 45
+    obj.angle = (rand(360))
     obj.setGameSize(gamesize)
     scene.add(obj)
   })
   Gaming()
 }
 
-function LeaveGame() {
+async function LeaveGame() {
   GameLoop = false
   Players.forEach(player => {
     scene.remove(player)
@@ -215,7 +219,6 @@ function score() {
     Pause = true
     console.log(Round)
     Ball[0].setSpeed(BallSpeed)
-    Ball[0].AngleToVelocity(rand(360))
     if (WinRound > 0)
       ScoreValue[0]++
     else
@@ -284,7 +287,7 @@ function moveTrees(gamesize) {
 }
 
 
-function Gaming() {
+async function Gaming() {
   let end = 0
   keybordGame(Pause)
   moveText()
@@ -297,13 +300,9 @@ function Gaming() {
     BallTimer++
     gamedata.TickTime()
     SetCamMode(true)
-    //console.log(Ball[0].angle)
-    //console.log()
-    //console.log("LR>", Ball[0].L_R,  "| UP DOWM", Ball[0].up_down)
-    //console.log(Ball[0].up_down)
   }
   else if (GameLoop != 2) {
-    var timer = 0
+    let timer = 0
     PauseTime--
     if (Round === -1) {
       SetCamMode(false)
@@ -317,14 +316,16 @@ function Gaming() {
       GameTextScore.updateSize(2, 0.4, 12)
       GameTextScore.updateTxt(String(timer))
       if (PauseTime == 0) {
+        const ballStartR = rand(4)
+        Ball[0].angle = ballStartR >= 2 ? 0 : 180
+        const LR = rand(4)
+        Ball[0].angle += LR >= 2 ? 45 : -45
         Pause = false
         PauseTime = PauseTimeDef
     }
   }
-  //let ing = Math.atan2(Players[1].position.y - Players[0].position.y , Players[1].position.x - Players[0].position.x)
-  //camera.rotation.z = ing
   if (keys.k.pressed || end == 1 ) { LeaveGame() }
-  if (keys.space.pressed) { moveTrees(10) }
+  //if (keys.space.pressed) { moveTrees(10) }
   Players.forEach(player => {
     player.velocity.x = 0
   })
@@ -333,9 +334,10 @@ function Gaming() {
     camera.position.y += 1
     camera.rotateX(endCamX / 200)
     endCamX += 0.05
+    if (ScoreValue[0] == 0 || ScoreValue[1] == 0) { moveTrees(10) } // funny egg
     if (endCamX > 5) {
       GameLoop = 0
-      LeaveGame()
+      await LeaveGame()
     }
   }
   if (GameLoop) {

@@ -8,29 +8,30 @@ import { Text } from './text.js'
 import { MODEL3D } from './Import3D.js'
 import { initMenu } from './menu.js'
 
-const  Second    =  60
-const  TimerDef        =  (Second * 5)
-let    Wait            =  0
+const  Second            =  60
+const  TimerDef          =  (Second * 5)
+let    Wait              =  0
 
-export let   endScore  =  [] //! js is such a shit show i hate it
+export let  endScore     =  [] //! js is such a shit show i hate it
 
-let   Texts            =  []
+let    Texts             =  []
 
-let   Light            =  []
-let   Amlight
+let    Light             =  []
+let    Amlight           =  null
 
-let   Maps             =  []
+let    Maps              =  []
 
-let   Loop             =  true
+let    Loop              =  true
 
-let   CamX             =  5
+let    CamX              =  5
 
-let   endBoard          =  []
+let    endBoard          =  []
 
 
-export function initEndGame()
+export async function initEndGame()
   {
     //
+    CamX = 5
     camera.position.set(0, 109 ,0)
     Light[0] = new THREE.DirectionalLight(0xffffff, 1)
     Light[0].position.y = 3
@@ -85,7 +86,7 @@ export function initEndGame()
 }
 
 
-function LeaveEndGame() {
+async function LeaveEndGame() {
   Light.forEach(l =>{
     scene.remove(l)
     l.dispose()
@@ -99,7 +100,6 @@ function LeaveEndGame() {
   Texts.forEach(txt => {
     txt.kill()
   })
-
 }
 
 function EndGameLoop() {
@@ -113,7 +113,7 @@ function EndGameLoop() {
       camera.position.y--
     SetCamMode(true)
   }
-  if (keys.space.pressed) { Loop = 0 }
+  if (keys.space.pressed &&  CamX < 1) { Loop = 0 }
   if (Loop) {
     Draw()
     requestAnimationFrame(EndGameLoop)
