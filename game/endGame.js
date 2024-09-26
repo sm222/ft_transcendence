@@ -27,6 +27,10 @@ let    CamX              =  5
 
 let    endBoard          =  []
 
+let    Moon              =  null
+let    MoonSpin          =  0
+
+//"moon" (https://skfb.ly/oFRLK) by RenderX is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 export async function initEndGame()
   {
@@ -41,10 +45,12 @@ export async function initEndGame()
       light.castShadow = true
       scene.add(light)
     })
+    MoonSpin = 0
+    Moon = new MODEL3D(scene, {x:0 , y:0, z:0}, [10, 10 ,10], 'model/moon.glb')
     Maps[0] = new ball({
-      width: 30,
+      width: 1,
       height: 0.5,
-      depth: 30,
+      depth: 1,
       color: 'darkgray',
       position: {
         x: 0,
@@ -100,10 +106,13 @@ async function LeaveEndGame() {
   Texts.forEach(txt => {
     txt.kill()
   })
+  Moon.kill()
 }
 
 function EndGameLoop() {
 
+  MoonSpin += 0.1
+  Moon.rotate(MoonSpin, 0 , MoonSpin)
   if (CamX > 0) {
     camera.rotateX(CamX / 200)
     CamX -= 0.05

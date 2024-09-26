@@ -7,7 +7,6 @@ import { GameData } from './gameSetting.js'
 
 // setup are made here
 export const gamedata = new GameData
-
 // default value
 //? _PlayerNames      =    ['mike' , 'bob'],
 //? _PlayerColors     =    ['green', 'red'],

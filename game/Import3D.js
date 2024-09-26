@@ -78,4 +78,7 @@ export class MODEL3D {
       this.scene.remove(this.model)
       this.model = null
     }
+    getPosition() {
+      return this.position
+    }
   }
