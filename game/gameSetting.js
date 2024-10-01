@@ -10,7 +10,8 @@ export class GameData {
     _CallBack         =    null,
     _EndScore         =    [0,0,0,0],
     _Times            =    [0, 0, 0],
-    _PlayersNumber    =    2
+    _PlayersNumber    =    2,
+    _GameSize         =    10
   ) {
     this._PlayerNames      =  _PlayerNames
     this._PlayerColors     =  _PlayerColors
@@ -19,9 +20,20 @@ export class GameData {
     this._CallBack         =  _CallBack
     this._EndScore         =  _EndScore
     this._Times            =  _Times
-    // 
     this._PlayersNumber    =  _PlayersNumber
+    this._GameSize         =  _GameSize
     // 
+  }
+  copy(data) {
+    this._PlayerNames      =  data._PlayerNames
+    this._PlayerColors     =  data._PlayerColors
+    this._PlayerColorsName =  data._PlayerColorsName
+    this._EndCall          =  data._EndCall
+    this._CallBack         =  data._CallBack
+    this._EndScore         =  data._EndScore
+    this._Times            =  data._Times
+    this._PlayersNumber    =  data._PlayersNumber
+    this._GameSize         =  data._GameSize
   }
   //* CallBack
   setCallBack(ft) {

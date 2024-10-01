@@ -6,8 +6,10 @@ import { Text } from        './text.js'
 import { ball } from        './ball.js'
 import { MODEL3D } from     './Import3D.js'
 import { endScore} from     './endGame.js'
-import { gamedata } from    './main.js'
 import { initEndGame } from './endGame.js'
+
+import { GameData   } from './gameSetting.js'
+import { Tournament } from './tournament.js'
 
 const Second        =  60
 const FirstPause    =  (Second * 5)
@@ -41,6 +43,10 @@ let   GameLoop      =  1
 
 let   endCamX       =  0
 
+const  newGamedata       =   new GameData
+const  newTrounemanData  =   new Tournament
+
+
 function rand(max) {
   return Math.floor(Math.random() * max)
 }
@@ -63,18 +69,20 @@ async function makeTrees(gamesize) {
   }
 }
 
-export async function initGame(gamesize) {
-  gamedata.resetTime()
-  gamedata.setEndGame(initEndGame)
+export async function initGame(gamedata, tournamentdata) {
+  newGamedata.copy(gamedata)
+  newTrounemanData.copy(tournamentdata)
+  newGamedata.resetTime()
+  newGamedata.setEndGame(initEndGame)
   endCamX = 0
-  await makeTrees(gamesize)
+  await makeTrees(newGamedata._GameSize)
   Round = -1
   GameLoop = 1
   PauseTime = FirstPause
   Pause = true
   ScoreValue[0] = 0 // score
   ScoreValue[1] = 0 // score
-  GameSize = gamesize
+  GameSize = newGamedata._GameSize
   PlayerSpeed = 0.15
   Map[0] = new Box({
     width: GameSize,
@@ -95,7 +103,7 @@ export async function initGame(gamesize) {
     width: 2,
     height: 0.4,
     depth: 0.4,
-    color: gamedata.getPlayerColor(0),
+    color: newGamedata.getPlayerColor(0),
     velocity: {
       x: 0,
       y: -0.01,
@@ -112,7 +120,7 @@ export async function initGame(gamesize) {
     width: 2,
     height: 0.4,
     depth: 0.3,
-    color: gamedata.getPlayerColor(1),
+    color: newGamedata.getPlayerColor(1),
     velocity: {
       x: 0,
       y: -0.01,
@@ -147,8 +155,8 @@ export async function initGame(gamesize) {
   camera.position.set(Map[0].position.x / 2, Map[0].position.y + GameSize, Map[0].position.z / 2)
   camera.lookAt(Map[0].position)
   // name
-  GameText[0] = new Text(scene, {x:0,y:0,z:0}, gamedata.getName(0) , gamedata.getPlayerNameColor(0))
-  GameText[1] = new Text(scene, {x:0,y:0,z:0}, gamedata.getName(1) , gamedata.getPlayerNameColor(1))
+  GameText[0] = new Text(scene, {x:0,y:0,z:0}, newGamedata.getName(0) , newGamedata.getPlayerNameColor(0))
+  GameText[1] = new Text(scene, {x:0,y:0,z:0}, newGamedata.getName(1) , newGamedata.getPlayerNameColor(1))
   GameText[0].rotate(-90,0,0)
   GameText[1].rotate(-90,0,0)
   GameTextScore = new Text(scene, {x:0,y:-4,z:-1.5}, '0:0', 'yellow')
@@ -172,7 +180,7 @@ export async function initGame(gamesize) {
   Ball.forEach(obj => {
     obj.setSpeed(BallSpeed, BallSpeed)
     obj.angle = (rand(360))
-    obj.setGameSize(gamesize)
+    obj.setGameSize(newGamedata._GameSize)
     scene.add(obj)
   })
   Gaming()
@@ -298,7 +306,7 @@ async function Gaming() {
       Ball[0].speed += 0.01
     }
     BallTimer++
-    gamedata.TickTime()
+    newGamedata.TickTime()
     SetCamMode(true)
   }
   else if (GameLoop != 2) {
@@ -346,9 +354,9 @@ async function Gaming() {
   }
   else {
     // end of the game here
-    const ft = gamedata.getEndGame()
-    gamedata.setEndScore(ScoreValue)
-    ft()
+    const ft = newGamedata.getEndGame()
+    newGamedata.setEndScore(ScoreValue)
+    ft(newGamedata, newTrounemanData)
     return
   }
 }

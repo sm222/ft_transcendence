@@ -5,7 +5,10 @@ import { keys } from './keybord.js'
 import { initGame } from './game.js'
 import { Text } from './text.js'
 import { MODEL3D } from './Import3D.js'
-import { gamedata } from './main.js'
+
+
+import { GameData } from './gameSetting.js'
+import { Tournament } from './tournament.js'
 
 
 export let output =  []
@@ -31,6 +34,8 @@ function AddButton(p, layer) {
   })
 }
 
+const  newGamedata       =   new GameData
+const  newTrounemanData  =   new Tournament
 
 //const followText = document.getElementById('follow-text')
 //const canvas = document.querySelector('canvas')
@@ -42,9 +47,12 @@ function MoveArrow(x, y, z) {
   MenuObj[4].position.set(x, y, z - 0.87)
 }
 
-export function initMenu() {
+export async function initMenu(gameData, TournamentData) {
+  newGamedata.copy(gameData)
+  newTrounemanData.copy(TournamentData)
   let i = 0
-  gamedata.setCallBack(initMenu)
+  console.log("A")
+  newGamedata.setCallBack(initMenu)
   for (let index = -30; index < 30; index += 10) {
     Decord[i++] = new MODEL3D(scene, {x:-10, y:-3, z:index}, [5,5,5])
   }
@@ -150,7 +158,7 @@ async function MainMenu() {
       case 3:
         Loop = 0
         // min 7 | 20 max to make it playable / def 10
-        await initGame(10)
+        await initGame(newGamedata, newTrounemanData)
         //        ^
         // game size
         break;
