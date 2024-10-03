@@ -11,7 +11,8 @@ export class GameData {
     _EndScore         =    [0,0,0,0],
     _Times            =    [0, 0, 0],
     _PlayersNumber    =    2,
-    _GameSize         =    10
+    _GameSize         =    10,
+    _keybordMode      =    false
   ) {
     this._PlayerNames      =  _PlayerNames
     this._PlayerColors     =  _PlayerColors
@@ -22,6 +23,7 @@ export class GameData {
     this._Times            =  _Times
     this._PlayersNumber    =  _PlayersNumber
     this._GameSize         =  _GameSize
+    this._keybordMode      =  _keybordMode
     // 
   }
   copy(data) {
@@ -34,6 +36,7 @@ export class GameData {
     this._Times            =  data._Times
     this._PlayersNumber    =  data._PlayersNumber
     this._GameSize         =  data._GameSize
+    this._keybordMode      =  data._keybordMode
   }
   //* CallBack
   setCallBack(ft) {

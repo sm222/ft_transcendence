@@ -4,7 +4,7 @@ export class Tournament {
   constructor(
     _PlayersNames     = ['mike' ,          'bob',  'liza',          'rose' ],
     _PlayersColors    = ['green',          'red',  'blue',          'White'],
-    _PlayerColorsName = ['lightseagreen' , 'pink', 'darkslateblue', 'gray' ]
+    _PlayerColorsName = ['lightseagreen' , 'pink', 'darkslateblue', 'gray' ],
   ) {
     this._PlayersNames = _PlayersNames
     this._PlayersColors = _PlayersColors
@@ -39,9 +39,9 @@ export class Tournament {
 
   start() {
     // safety
-    //if (!this._game)     { alert("no gameMode set!"); return }
-    //if (!this._GameData) { alert("no gameData set!"); return }
-    //
+    if (!this._game)     { alert("no gameMode set!"); return }
+    if (!this._GameData) { alert("no gameData set!"); return }
+    
     this._GameData.resetTime()
     //this._GameData.setEndGame(this.nextRound)
     const firstSize = this._PlayersNames.length
@@ -69,9 +69,6 @@ export class Tournament {
       playercolor.push(this._PlayersColors[this._tempList[this._roundIndex][index]])
       playercolorName.push(this._PlayerColorsName[this._tempList[this._roundIndex][index]])
     }
-    console.log(name)
-    console.log(playercolor)
-    console.log(playercolorName)
     this._GameData.setNames(name)
     this._GameData.setPlayerColors(playercolor)
     this._GameData.setPlayersColors(playercolorName)

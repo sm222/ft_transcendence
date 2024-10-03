@@ -258,28 +258,26 @@ function moveText() {
 // await new Promise(r => setTimeout(r, 1000));
 
 function keybordGame(noGame) {
-  if (noGame) {
-    Players.forEach((player) => { player.update(Map[0])})
-    Players.forEach(p => {p.position.x = 0})
-    return
-  }
+  if (newGamedata._keybordMode) {
+    if (noGame) {
+      Players.forEach((player) => { player.update(Map[0])})
+      Players.forEach(p => {p.position.x = 0})
+      return
+    }
     if (keys.a.pressed && Players[0].position.x >
     (GameSize / 2) * -1 + (Players[0].width / 2)) {
       Players[0].velocity.x = PlayerSpeed * -1
     }
-    else if (keys.d.pressed && Players[0].position.x <
-      (GameSize / 2) - (Players[0].width / 2)) {
-        Players[0].velocity.x = PlayerSpeed
-      }
-    if (keys.left.pressed && Players[1].position.x >
-    (GameSize / 2) * -1 + (Players[1].width / 2)) {
+    else if (keys.d.pressed && Players[0].position.x < (GameSize / 2) - (Players[0].width / 2)) { 
+      Players[0].velocity.x = PlayerSpeed }
+    if (keys.left.pressed && Players[1].position.x > (GameSize / 2) * -1 + (Players[1].width / 2)) {
       Players[1].velocity.x = PlayerSpeed * -1
     }
-    else if (keys.right.pressed && Players[1].position.x <
-      (GameSize / 2) - (Players[1].width / 2)) {
+    else if (keys.right.pressed && Players[1].position.x < (GameSize / 2) - (Players[1].width / 2)) {
         Players[1].velocity.x = PlayerSpeed
     }
-  Players.forEach((player) => { player.update(Map[0])})
+    Players.forEach((player) => { player.update(Map[0])})
+  }
 }
 
 

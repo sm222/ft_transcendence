@@ -35,17 +35,12 @@ let    MoonSpin          =  0
 const  newGamedata       =   new GameData
 const  newTrounemanData  =   new Tournament
 
-let stored
-let myVar
 export async function initEndGame(gamedata, tournamentdata)
 {
   newGamedata.copy(gamedata)
   newTrounemanData.copy(tournamentdata)
   //
   CamX = 5
-  stored = localStorage['game'];
-  if (stored) { myVar = JSON.parse(stored); }
-  console.log(myVar)
   camera.position.set(0, 109 ,0)
   Light[0] = new THREE.DirectionalLight(0xffffff, 1)
   Light[0].position.y = 5
