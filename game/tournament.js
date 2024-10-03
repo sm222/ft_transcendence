@@ -46,9 +46,7 @@ export class Tournament {
     //this._GameData.setEndGame(this.nextRound)
     const firstSize = this._PlayersNames.length
     let endSize = 1
-    for (let size = firstSize; size / 2 >= 1; size /= 2) {
-      endSize++
-    }
+    for (let size = firstSize; size / 2 >= 1; size /= 2) { endSize++ }
     let pose = 0
     for (let index = 0; index < endSize - 1; index++) {
       this._tempList.push([pose, pose + 1])
