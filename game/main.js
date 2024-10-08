@@ -23,8 +23,8 @@ const TournamentData = new Tournament
 //? _PlayersNumber    =    2
 
 gamedata.setCallBack(initMenu)
-//TournamentData.setGame(initGame)
-TournamentData.setGame(initDevRoom)
+TournamentData.setGame(initGame)
+//TournamentData.setGame(initDevRoom)
 TournamentData.setGameData(gamedata)
 gamedata._keybordMode =  true
 Draw()          //* init

@@ -225,7 +225,6 @@ function score() {
   })
   if (WinRound !== 0) {
     Pause = true
-    console.log(Round)
     Ball[0].setSpeed(BallSpeed)
     if (WinRound > 0)
       ScoreValue[0]++
@@ -292,6 +291,9 @@ function moveTrees(gamesize) {
   })
 }
 
+function selecWin(score) {
+  return Number(score[1] > score[0])
+}
 
 async function Gaming() {
   let end = 0
@@ -351,7 +353,15 @@ async function Gaming() {
     requestAnimationFrame(Gaming)
   }
   else {
+    //newTrounemanData._roundWiner.push()
     // end of the game here
+    const win =  Number(selecWin(ScoreValue))
+    newTrounemanData._roundWiner.push([
+      newGamedata.getName(win), 
+      newGamedata.getPlayerColor(win), 
+      newGamedata.getPlayerNameColor(win)])
+    console.log("ici > ")
+    console.log(newTrounemanData._roundWiner)
     const ft = newGamedata.getEndGame()
     newGamedata.setEndScore(ScoreValue)
     ft(newGamedata, newTrounemanData)

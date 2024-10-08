@@ -15,6 +15,7 @@ export class Tournament {
     this._totalRound = 0
     this._tempList = []
     this._roundIndex = 0
+    this._roundWiner = []
   }
   copy(data) {
     this._PlayersNames     =  data._PlayersNames
@@ -26,6 +27,7 @@ export class Tournament {
     this._totalRound       =  data._totalRound
     this._tempList         =  data._tempList
     this._roundIndex       =  data._roundIndex
+    this._roundWiner       =  data._roundWiner
   }
   setPlayersNames(names) { this._PlayersNames = names }
 
@@ -75,6 +77,5 @@ export class Tournament {
     ft(this._GameData, this)
   }
   end() {
-
   }
 }

@@ -46,10 +46,10 @@ export async function initDevRoom(gamedata, tournamentdata)
   //
   GameLoop = 1
   //
-  Light[0] = new THREE.DirectionalLight(0xffffff, 2)
+  Light[0] = new THREE.DirectionalLight(0xffffff, 1)
   Light[0].position.y = 10
   Light[0].position.z = 0
-  Amlight = new THREE.AmbientLight(0xffffff, 1)
+  Amlight = new THREE.AmbientLight(0xffffff, 0.8)
   //
   Map[0] = new Box({
     width: 1, height: 1, depth: 1,
@@ -129,6 +129,7 @@ async function devRoom() {
   keybordGame(GameLoop)
   SetCamMode(false)
   camera.position.set(camPosx , camPosy, camPosz + 5)
+  Light[0].position.set(Light[0].position.x, Light[0].position.y, camPosz + 5)
   camPosy -= speed
   if (camPosy <= -max) {
     camPosy = 4
