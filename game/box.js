@@ -31,13 +31,12 @@ export class Box extends THREE.Mesh {
     geo  = new THREE.BoxGeometry(width, height, depth),
     mesh = new THREE.MeshStandardMaterial({ color, opacity: opacity, transparent: transparent })
   }) {
-    //dispose
     super(
       geo,
       mesh
     )
     this.geo = geo
-    this.mesh = geo
+    this.mesh = mesh
     this.width = width
     this.height = height
     this.depth = depth

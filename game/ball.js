@@ -28,15 +28,20 @@ export class ball extends Obj {
       z: 0
     },
     zAcceleration = false,
+    opacity = 1,
+    transparent = false,
     Geometry = new THREE.SphereGeometry(width / 2),
   }) {
-    super(width,
+    super(
+      width,
       height,
       depth,
       color,
       velocity,
       position,
       zAcceleration,
+      opacity,
+      transparent,
       Geometry
   )
     this.gameSize = 10
@@ -132,7 +137,6 @@ export class ball extends Obj {
       if      (player.position.z > this.position.z && !this.up_down) { this.setAngleOnHit(this.angle , 90) }
       else if (player.position.z < this.position.z &&  this.up_down) { this.setAngleOnHit(this.angle , 90) }
       const resInflu = (player.position.z > 0 ? -influance : influance) // need for the down padle
-      console.log(resInflu + this.angle)
       if (resInflu + this.angle != 90 || resInflu + this.angle != 270) //! could be a fix
         this.angle += resInflu
       this.AngleToVelocity(this.angle)

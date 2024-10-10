@@ -32,6 +32,7 @@ let   Players       =  []
 let   Map           =  []
 let   Ball          =  []
 let   Trees         =  []
+let   Snow          =  null
 let   GameTextScore =  null
 
 let   Light         =  []
@@ -98,6 +99,20 @@ export async function initGame(gamedata, tournamentdata) {
     opacity:0.3,
     transparent: true
   })
+  Snow = new Box({
+    width: GameSize * 25,
+    height: 0.5,
+    depth: GameSize * 25,
+    color: '#3d3e40',
+    position: {
+      x: 0,
+      y: -6,
+      z: 0
+    },
+    zAcceleration:false,
+    opacity:1,
+    transparent: false
+  })
   // player
   Players[0] = new Box({
     width: 2,
@@ -134,9 +149,8 @@ export async function initGame(gamedata, tournamentdata) {
   })
   //
   Light[0] = new THREE.DirectionalLight(0xffffff, 2)
-  Light[0].position.y = 3
-  Light[0].position.z = 1
-  Amlight = new THREE.AmbientLight(0xffffff, 10)
+  Light[0].position.y = 6
+  Amlight = new THREE.AmbientLight(0xffffff, 1)
   //
   Light.forEach(light => {
     light.castShadow = true
@@ -149,14 +163,17 @@ export async function initGame(gamedata, tournamentdata) {
   })
   //
   Map.forEach(obj => {
-    obj.receiveShadow = true
+    //obj.receiveShadow = true
     scene.add(obj)
   })
+  Snow.receiveShadow = true
+  scene.add(Snow)
+  //
   camera.position.set(Map[0].position.x / 2, Map[0].position.y + GameSize, Map[0].position.z / 2)
   camera.lookAt(Map[0].position)
   // name
-  GameText[0] = new Text(scene, {x:0,y:0,z:0}, newGamedata.getName(0) , newGamedata.getPlayerNameColor(0))
-  GameText[1] = new Text(scene, {x:0,y:0,z:0}, newGamedata.getName(1) , newGamedata.getPlayerNameColor(1))
+  GameText[0] = new Text(scene, {x:0,y:0,z:0}, newGamedata.getName(1) , newGamedata.getPlayerNameColor(1))
+  GameText[1] = new Text(scene, {x:0,y:0,z:0}, newGamedata.getName(0) , newGamedata.getPlayerNameColor(0))
   GameText[0].rotate(-90,0,0)
   GameText[1].rotate(-90,0,0)
   GameTextScore = new Text(scene, {x:0,y:-4,z:-1.5}, '0:0', 'yellow')
@@ -176,10 +193,15 @@ export async function initGame(gamedata, tournamentdata) {
       x: 0,
       y: -1.5,
       z: 0
-    }})
+    },
+    zAcceleration: false,
+    transparent: true,
+    opacity: 0.8
+  })
   Ball.forEach(obj => {
     obj.setSpeed(BallSpeed, BallSpeed)
     obj.angle = (rand(360))
+    obj.castShadow = true
     obj.setGameSize(newGamedata._GameSize)
     scene.add(obj)
   })
@@ -212,6 +234,8 @@ async function LeaveGame() {
     obj.kill()
   })
   GameTextScore.kill()
+  scene.remove(Snow)
+  Snow.kill()
 }
 
 

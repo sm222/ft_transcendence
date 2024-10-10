@@ -1,4 +1,3 @@
-import * as THREE from 'three'
 
 import { GameData } from './gameSetting.js'
 import { Tournament } from './tournament.js'
@@ -39,7 +38,6 @@ async function MainMenu() {
       newTrounemanData.setPlayersColosName(playerColor)
       newTrounemanData.start()
       console.log("new round")
-
     }
     else
       console.log("endgame")

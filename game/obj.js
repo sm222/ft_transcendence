@@ -26,13 +26,17 @@ export class Obj extends THREE.Mesh {
       z: 0
     },
     zAcceleration = false,
+    opacity = 1,
+    transparent = false,
     Geometry = new THREE.BoxGeometry(width, height, depth),
-    Mat      = new THREE.MeshStandardMaterial({ color })
+    Mat      = new THREE.MeshStandardMaterial({ color, opacity: opacity, transparent: transparent })
   ) {
       super(
         Geometry,
         Mat
       )
+    this.transparent = transparent
+    this.opacity  = opacity
     this.Geometry = Geometry
     this.Material = Mat
     this.width    = width

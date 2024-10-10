@@ -34,6 +34,8 @@ export class MODEL3D {
       loader.load(this.ModelName, (model) => {
         this.model = model.scene;
         model.scene.scale.set(this.size[0], this.size[1], this.size[2])
+        model.scene.receiveShadow = true
+        model.scene.castShadow = true
         this.scene.add( model.scene );
         this.createTextMesh();
       });
