@@ -30,18 +30,71 @@ let    endBoard          =  []
 
 let    Moon              =  null
 let    MoonSpin          =  0
-let    speed             = 0.01
+let    speed             =  0.01
 
 //"moon" (https://skfb.ly/oFR LK) by RenderX is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 const  newGamedata       =   new GameData
 const  newTrounemanData  =   new Tournament
 
+
+function nextGame() {
+  const PlayersName   = newGamedata.getNames()
+  const playersScore  = newGamedata.getEndScore()
+  const playersColors = newGamedata.getPlayersNameColor()
+  endBoard = [] //! reset endboard
+  for (let index = 0; index < PlayersName.length; index++) {
+    console.log(playersScore[index])
+    console.log(PlayersName[index])
+    console.log(playersColors[index])
+    endBoard.push([playersScore[index], PlayersName[index], playersColors[index]])
+  }
+  for (let index = 0; index < endBoard.length - 1; index++) {
+    if (endBoard[index][0] > endBoard[index + 1][0]) { 
+      const tmp = endBoard[index]
+      endBoard[index] = endBoard[index + 1]
+      endBoard[index + 1] = tmp
+      index = -1
+      
+    }
+  }
+  const ofSet = 0
+  for (let index = endBoard.length - 1; index > -1; index--) {
+    Texts[index + 1] = new Text(scene, {x:ofSet ,y:8,z:-(index * 1.2)}, String(endBoard[index][1] + ' : ' + endBoard[index][0]), endBoard[index][2])
+    Texts[index + 1].rotate(-90,0,0)
+  }
+  const gameTime = newGamedata.getTime()
+  Texts.push(new Text(scene, {x:0, y:8, z:4}, String("Time play: m" + gameTime[0] + ":s" + gameTime[1])))
+  Texts[Texts.length - 1].rotate(-90,0,0)
+  Texts.push(new Text(scene, {x:0,  y:8, z:5}, String("press space to continue")))
+  Texts[Texts.length - 1].rotate(-90,0,0)
+}
+
+function winer() {
+  const PlayersName   = newGamedata.getNames()
+  const playersScore  = newGamedata.getEndScore()
+  const playersColors = newGamedata.getPlayersNameColor()
+  endBoard = [] //! reset endboard
+  for (let index = 0; index < PlayersName.length; index++) {
+    endBoard.push([playersScore[index], PlayersName[index], playersColors[index]])
+  }
+  endBoard.sort()
+  const ofSet = 0
+  Texts.push(new Text(scene, {x:ofSet ,y:8,z:-(1.2)}, String(endBoard[1][1] + ' : ' + endBoard[1][0]), endBoard[1][2], 'fonts/Ubuntu Light_Bold.json', 2))
+  Texts[Texts.length - 1].rotate(-90,0,0)
+  Texts.push(new Text(scene, {x:ofSet ,y:8,z:-(5.2)}, String(endBoard[0][1] + ' : ' + endBoard[0][0]), endBoard[0][2], 'fonts/Ubuntu Light_Bold.json', 1))
+  Texts[Texts.length - 1].rotate(-90,0,0)
+  const gameTime = newGamedata.getTime()
+  Texts.push(new Text(scene, {x:0, y:8, z:4}, String("Time play: m" + gameTime[0] + ":s" + gameTime[1])))
+  Texts[Texts.length - 1].rotate(-90,0,0)
+}
+
 export async function initEndGame(gamedata, tournamentdata)
 {
   newGamedata.copy(gamedata)
   newTrounemanData.copy(tournamentdata)
   //
+
   CamX = 5
   MoonSpin = 0
   speed = 0
@@ -57,18 +110,10 @@ export async function initEndGame(gamedata, tournamentdata)
   const moonSize = 20
   Moon = new MODEL3D(scene, {x:0 , y:-15, z:0}, [moonSize, moonSize ,moonSize], 'model/moon.glb')
   Maps[0] = new ball({
-    width: 1,
-    height: 0.5,
-    depth: 1,
+    width: 1, height: 0.5, depth: 1,
     color: 'darkgray',
-    position: {
-      x: 0,
-      y: -10,
-      z: 0
-    },
-    zAcceleration:true,
-    opacity:1,
-    transparent: true
+    position: { x: 0, y: -10, z: 0 },
+    zAcceleration:true, opacity:1, transparent: true
     })
     Maps.forEach(obj => {
       obj.receiveShadow = true
@@ -77,24 +122,12 @@ export async function initEndGame(gamedata, tournamentdata)
   camera.lookAt(Maps[0].position)
   Loop = true
   camera.rotateX(CamX)
-  const PlayersName = gamedata.getNames()
-  const playersScore = gamedata.getEndScore()
-  const playersColors = gamedata.getPlayersNameColor()
-  endBoard = [] //! reset endboard
-  for (let index = 0; index < PlayersName.length; index++) {
-    endBoard.push([playersScore[index], PlayersName[index], playersColors[index]])
+  if (newTrounemanData._totalRound > 2) {
+    nextGame()
   }
-  endBoard.sort()
-  let ofSet = 0
-  if (1)
-    ofSet += 0
-  for (let index = endBoard.length - 1; index > -1; index--) {
-    Texts[index + 1] = new Text(scene, {x:ofSet ,y:8,z:-(index * 1.2)}, String(endBoard[index][1] + ' : ' + endBoard[index][0]), endBoard[index][2])
-    Texts[index + 1].rotate(-90,0,0)
+  else {
+    winer()
   }
-  const gameTime = gamedata.getTime()
-  Texts.push(new Text(scene, {x:-6, y:8, z:4}, String("Time play: m" + gameTime[0] + ":s" + gameTime[1])))
-  Texts[Texts.length - 1].rotate(-90,0,0)
   EndGameLoop()
 }
 
@@ -120,6 +153,7 @@ async function LeaveEndGame() {
 async function EndGameLoop() {
   MoonSpin += speed
   speed += 0.0001
+  SetCamMode(false)
   Moon.rotate(MoonSpin, 0 , MoonSpin)
   if (CamX > 0) {
     camera.rotateX(CamX / 200)
@@ -128,7 +162,6 @@ async function EndGameLoop() {
   else {
     if (camera.position.y > 20)
       camera.position.y--
-    SetCamMode(true)
   }
   if (keys.space.pressed &&  CamX < 1) { Loop = 0 }
   if (Loop) {

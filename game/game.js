@@ -251,16 +251,15 @@ function score() {
     Pause = true
     Ball[0].setSpeed(BallSpeed)
     if (WinRound > 0)
-      ScoreValue[0]++
-    else
       ScoreValue[1]++
+    else
+      ScoreValue[0]++
     Round++
   }
   GameTextScore.updateSize(2, 0.4, 12)
-  GameTextScore.updateTxt(String(ScoreValue[0] + '\n' + ScoreValue[1]))
+  GameTextScore.updateTxt(String(ScoreValue[1] + '\n' + ScoreValue[0]))
   if (ScoreValue[0] >= BestOf / 2 || ScoreValue[1] >= BestOf / 2) {
-    endScore[0] = ScoreValue[0]
-    endScore[1] = ScoreValue[1]
+    newGamedata.setEndScore(ScoreValue)
     GameLoop = 2
     return 2
   }
@@ -316,7 +315,7 @@ function moveTrees(gamesize) {
 }
 
 function selecWin(score) {
-  return Number(score[1] > score[0])
+  return Boolean(score[1] > score[0])
 }
 
 async function Gaming() {
@@ -379,13 +378,12 @@ async function Gaming() {
   else {
     //newTrounemanData._roundWiner.push()
     // end of the game here
+    console.log(ScoreValue)
     const win =  Number(selecWin(ScoreValue))
     newTrounemanData._roundWiner.push([
       newGamedata.getName(win), 
       newGamedata.getPlayerColor(win), 
       newGamedata.getPlayerNameColor(win)])
-    console.log("ici > ")
-    console.log(newTrounemanData._roundWiner)
     const ft = newGamedata.getEndGame()
     newGamedata.setEndScore(ScoreValue)
     ft(newGamedata, newTrounemanData)

@@ -9,7 +9,7 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry';
 
 export class Text {
   constructor(scene, position, initialText, color = 'blue', 
-    FontName = 'fonts/Ubuntu Light_Bold.json', detail = {}) {
+    FontName = 'fonts/Ubuntu Light_Bold.json', size = 0.5) {
     this.scene = scene;
     this.position = position;
     this.rotation = {x:0, y:0, z:0}
@@ -19,7 +19,7 @@ export class Text {
     this.color = color
     this.FontName = FontName
     //
-    this.size = 0.5
+    this.size = size
     this.height = 0.1
     this.curveSegments = 12
     this.loadFont();

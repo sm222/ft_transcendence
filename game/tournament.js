@@ -6,16 +6,16 @@ export class Tournament {
     _PlayersColors    = ['green',          'red',  'blue',          'White'],
     _PlayerColorsName = ['lightseagreen' , 'pink', 'darkslateblue', 'gray' ],
   ) {
-    this._PlayersNames = _PlayersNames
-    this._PlayersColors = _PlayersColors
+    this._PlayersNames     = _PlayersNames
+    this._PlayersColors    = _PlayersColors
     this._PlayerColorsName = _PlayerColorsName
-    this._game = null
-    this._list = null
-    this._GameData = null
-    this._totalRound = 0
-    this._tempList = []
-    this._roundIndex = 0
-    this._roundWiner = []
+    this._game             = null
+    this._list             = null
+    this._GameData         = null
+    this._totalRound       = 0
+    this._tempList         = []
+    this._roundIndex       = 0
+    this._roundWiner       = []
   }
   copy(data) {
     this._PlayersNames     =  data._PlayersNames
@@ -56,8 +56,6 @@ export class Tournament {
     }
     this._totalRound = endSize
     this._roundIndex = 0
-    console.log(this._tempList)
-
     this.nextRound()
   }
   nextRound() {
