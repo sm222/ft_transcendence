@@ -338,10 +338,11 @@ async function Gaming() {
     if (Round === -1) {
       SetCamMode(false)
       camera.position.set(Map[0].position.x / 2, Map[0].position.y + GameSize + (PauseTime / 2), Map[0].position.z / 2)
+      camera.setFocalLength(7 + PauseTime / 10 )
       camera.lookAt(Map[0].position)
-      camera.rotateZ(PauseTime / 200)
+      camera.rotateZ(PauseTime / 190)
       camera.rotateY(PauseTime / 200)
-      //controls.saveState()
+      console.log(camera.getFocalLength())
     }
     for (let index = PauseTime; index > 0; index -= 60) { timer++ }
       GameTextScore.updateSize(2, 0.4, 12)
@@ -366,7 +367,7 @@ async function Gaming() {
     camera.rotateX(endCamX / 200)
     endCamX += 0.05
     if (ScoreValue[0] == 0 || ScoreValue[1] == 0) { moveTrees(10) } // funny egg
-    if (endCamX > 5) {
+    if (endCamX > 6) {
       GameLoop = 0
       await LeaveGame()
     }
@@ -376,13 +377,11 @@ async function Gaming() {
     requestAnimationFrame(Gaming)
   }
   else {
-    //newTrounemanData._roundWiner.push()
     // end of the game here
-    console.log(ScoreValue)
     const win =  Number(selecWin(ScoreValue))
     newTrounemanData._roundWiner.push([
-      newGamedata.getName(win), 
-      newGamedata.getPlayerColor(win), 
+      newGamedata.getName(win),
+      newGamedata.getPlayerColor(win),
       newGamedata.getPlayerNameColor(win)])
     const ft = newGamedata.getEndGame()
     newGamedata.setEndScore(ScoreValue)
