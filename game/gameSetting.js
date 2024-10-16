@@ -1,18 +1,20 @@
+import * as THREE from 'three'
 
 const Second  =  60
 
 export class GameData {
   constructor(
-    _PlayerNames      =    ['mike' , 'bob'],
-    _PlayerColors     =    ['green', 'red'],
-    _PlayerColorsName =    ['pink' , 'lightseagreen'],
-    _EndCall          =    null,
-    _CallBack         =    null,
-    _EndScore         =    [0,0,0,0],
-    _Times            =    [0, 0, 0],
-    _PlayersNumber    =    2,
-    _GameSize         =    10,
-    _keybordMode      =    false
+    _PlayerNames      =      ['mike' , 'bob'],
+    _PlayerColors     =      ['green', 'red'],
+    _PlayerColorsName =      ['pink' , 'lightseagreen'],
+    _EndCall          =      null,
+    _CallBack         =      null,
+    _EndScore         =      [0,0,0,0],
+    _Times            =      [0, 0, 0],
+    _PlayersNumber    =      2,
+    _GameSize         =      10,
+    _keybordMode      =      false,
+    _Clock            = new  THREE.Clock(false)
   ) {
     this._PlayerNames      =  _PlayerNames
     this._PlayerColors     =  _PlayerColors
@@ -24,6 +26,7 @@ export class GameData {
     this._PlayersNumber    =  _PlayersNumber
     this._GameSize         =  _GameSize
     this._keybordMode      =  _keybordMode
+    this._Clock            =  _Clock
     // 
   }
   copy(data) {
@@ -37,6 +40,7 @@ export class GameData {
     this._PlayersNumber    =  data._PlayersNumber
     this._GameSize         =  data._GameSize
     this._keybordMode      =  data._keybordMode
+    this._Clock            =  data._Clock
   }
   //* CallBack
   setCallBack(ft) {

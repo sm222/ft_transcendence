@@ -44,14 +44,19 @@ let   GameLoop      =  1
 
 let   endCamX       =  0
 
+const AiNames       = ['GLaDOS', 'HAL 9000', 'AUTO', 'Cylons', 'Ava', 'Samantha']
+let   time          =  0
+
 const  newGamedata       =   new GameData
 const  newTrounemanData  =   new Tournament
-
 
 function rand(max) {
   return Math.floor(Math.random() * max)
 }
 
+function getAiName() {
+  return AiNames[rand(6)]
+}
 
 async function makeTrees(gamesize) {
   let k = 0
@@ -70,12 +75,14 @@ async function makeTrees(gamesize) {
   }
 }
 
-export async function initGame(gamedata, tournamentdata) {
+export async function initGameAi(gamedata, tournamentdata) {
   newGamedata.copy(gamedata)
   newTrounemanData.copy(tournamentdata)
   newGamedata.resetTime()
   newGamedata.setEndGame(initEndGame)
   endCamX = 0
+  newGamedata.setName(getAiName(), 1)
+  newGamedata._Clock.start()
   await makeTrees(newGamedata._GameSize)
   Round = -1
   GameLoop = 1
@@ -205,7 +212,7 @@ export async function initGame(gamedata, tournamentdata) {
     obj.setGameSize(newGamedata._GameSize)
     scene.add(obj)
   })
-  Gaming()
+  GamingAi()
 }
 
 async function LeaveGame() {
@@ -292,11 +299,25 @@ function keybordGame(noGame) {
     }
     else if (keys.d.pressed && Players[0].position.x < (GameSize / 2) - (Players[0].width / 2)) { 
       Players[0].velocity.x = PlayerSpeed }
+    /*
     if (keys.left.pressed && Players[1].position.x > (GameSize / 2) * -1 + (Players[1].width / 2)) {
       Players[1].velocity.x = PlayerSpeed * -1
     }
     else if (keys.right.pressed && Players[1].position.x < (GameSize / 2) - (Players[1].width / 2)) {
         Players[1].velocity.x = PlayerSpeed
+    }
+    */
+    const deadzone = 1.2
+    time += newGamedata._Clock.getDelta()
+    console.log(time)
+    if (time >= 1 && (Players[1].position.x + deadzone < Ball[0].position.x || Players[1].position.x + -deadzone > Ball[0].position.x)) {
+      time = 0
+      if (Players[1].position.x > -(GameSize / 2) + (Players[1].width / 2) && Ball[0].position.x < Players[1].position.x ) {
+        Players[1].velocity.x =  -PlayerSpeed
+      }
+      if (Players[1].position.x < (GameSize / 2)  - (Players[1].width / 2) && Ball[0].position.x > Players[1].position.x) {
+        Players[1].velocity.x =  PlayerSpeed
+      }
     }
     Players.forEach((player) => { player.update(Map[0])})
   }
@@ -318,7 +339,7 @@ function selecWin(score) {
   return Boolean(score[1] > score[0])
 }
 
-async function Gaming() {
+async function GamingAi() {
   let end = 0
   keybordGame(Pause)
   moveText()
@@ -338,11 +359,10 @@ async function Gaming() {
     if (Round === -1) {
       SetCamMode(false)
       camera.position.set(Map[0].position.x / 2, Map[0].position.y + GameSize + (PauseTime / 2), Map[0].position.z / 2)
-      camera.setFocalLength(10 + PauseTime / 10 )
+      camera.setFocalLength(10 + PauseTime / 10)
       camera.lookAt(Map[0].position)
       camera.rotateZ(PauseTime / 190)
       camera.rotateY(PauseTime / 200)
-      console.log(camera.getFocalLength())
     }
     for (let index = PauseTime; index > 0; index -= 60) { timer++ }
       GameTextScore.updateSize(2, 0.4, 12)
@@ -374,7 +394,7 @@ async function Gaming() {
   }
   if (GameLoop) {
     Draw()
-    requestAnimationFrame(Gaming)
+    requestAnimationFrame(GamingAi)
   }
   else {
     // end of the game here
