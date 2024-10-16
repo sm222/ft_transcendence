@@ -307,10 +307,9 @@ function keybordGame(noGame) {
         Players[1].velocity.x = PlayerSpeed
     }
     */
-    const deadzone = 1.2
+    const deadzone = 1.3 //! dificulty
     time += newGamedata._Clock.getDelta()
-    console.log(time)
-    if (time >= 1 && (Players[1].position.x + deadzone < Ball[0].position.x || Players[1].position.x + -deadzone > Ball[0].position.x)) {
+    if (time >= 0.1000 && (Players[1].position.x + deadzone < Ball[0].position.x || Players[1].position.x + -deadzone > Ball[0].position.x)) {
       time = 0
       if (Players[1].position.x > -(GameSize / 2) + (Players[1].width / 2) && Ball[0].position.x < Players[1].position.x ) {
         Players[1].velocity.x =  -PlayerSpeed
@@ -374,13 +373,16 @@ async function GamingAi() {
         Ball[0].angle += LR >= 2 ? 45 : -45
         Pause = false
         PauseTime = PauseTimeDef
+        newGamedata._Clock.start()
     }
   }
   if (keys.k.pressed || end == 1 ) { LeaveGame() }
   //if (keys.space.pressed) { moveTrees(10) }
-  Players.forEach(player => {
-    player.velocity.x = 0
-  })
+  //Players.forEach(player => {
+  //})
+  Players[0].velocity.x = 0
+  if (!(Players[1].position.x < (GameSize / 2)  - (Players[1].width / 2)) || !(Players[1].position.x > -(GameSize / 2) + (Players[1].width / 2)))
+    Players[1].velocity.x = 0
   if (GameLoop == 2) {
     SetCamMode(false)
     camera.position.y += 1
