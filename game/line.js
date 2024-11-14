@@ -1,0 +1,61 @@
+import * as THREE from 'three'
+import { scene, camera, Draw, SetCamMode } from './render.js'
+
+
+
+export function getLineLen(a , b) {
+    return (Math.sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y)))
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function rand(max) {
+    return Math.floor(Math.random() * max)
+}
+
+export class line2D {
+    constructor (aX ,aY , bX, bY) {
+        this.a = new THREE.Vector2(aX, aY)
+        this.b = new THREE.Vector2(bX, bY)
+        this.Linematerial = null
+        this.points = []
+        this.Linegeometry = null
+        this.line = null
+        this.color = null
+    }
+    setColor(col) {
+        this.color = col
+    }
+    getLen() {
+        return (getLineLen(this.a, this.b))
+    }
+    DrawLine() {
+        if (!this.color)
+            this.Linematerial = new THREE.LineBasicMaterial( { color: rand(0xffffff) } );
+        else
+        this.Linematerial = new THREE.LineBasicMaterial( { color: this.color } );
+        this.points.push( new THREE.Vector3( this.a.x, -1.2, this.a.y ) );
+        this.points.push( new THREE.Vector3( this.b.x, -1.2, this  .b.y ) );
+        this.Linegeometry = new THREE.BufferGeometry().setFromPoints( this.points );
+        this.line = new THREE.Line( this.Linegeometry, this.Linematerial );
+        scene.add( this.line );
+    }
+    rm() {
+        if (this.line) {
+            scene.remove(this.line)
+            this.Linegeometry.dispose()
+            this.points = []
+            this.Linematerial.dispose()
+        }
+    }
+}
+
+
+    //  Ball[0].position.x > Players[0].position.x ? Players[0].position.x - (Players[0].width / 2) : Players[0].position.x + (Players[0].width / 2),
+    //  Ball[0].position.z < Players[0].position.z ? Players[0].position.z - (Players[0].depth / 2) : Players[0].position.z + (Players[0].depth / 2))
+    //  
+    //  console.log(Ball[0].position.x > Players[0].position.x ? Players[0].position.x - (Players[0].width / 2) : Players[0].position.x + (Players[0].width / 2),
+    //              Ball[0].position.z < Players[0].position.z ? Players[0].position.z - (Players[0].depth / 2) : Players[0].position.z + (Players[0].depth / 2))
+    //  scene.add( line );

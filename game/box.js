@@ -40,6 +40,7 @@ export class Box extends THREE.Mesh {
     this.width = width
     this.height = height
     this.depth = depth
+    this.Wall = 90
 
     this.position.set(position.x, position.y, position.z)
 
@@ -98,5 +99,11 @@ export class Box extends THREE.Mesh {
   kill() {
     this.geo.dispose()
     this.mesh.dispose()
+  }
+  getWall() {
+    return Number(this.Wall)
+  }
+  setWall(d) {
+    this.Wall = Number(d)
   }
 }

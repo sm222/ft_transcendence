@@ -42,7 +42,8 @@ export class Obj extends THREE.Mesh {
     this.width    = width
     this.height   = height
     this.depth    = depth
-
+    
+    this.Wall = 90
     this.position.set(position.x, position.y, position.z)
 
     this.right = this.position.x + this.width / 2
@@ -60,6 +61,12 @@ export class Obj extends THREE.Mesh {
     this.zAcceleration = zAcceleration
   }
 
+  getWall() {
+    return Number(this.Wall)
+  }
+  setWall(d) {
+    this.Wall = Number(d)
+  }
   updateSides() {
     this.right = this.position.x + this.width / 2
     this.left = this.position.x - this.width / 2

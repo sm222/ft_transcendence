@@ -7,6 +7,7 @@ import { initGame } from './game.js'
 
 import { initGameAi  } from './gameAi.js'
 import { initDevRoom } from './devRoom.js'
+import { initGame4player } from './game4players.js'
 
 //https://youtu.be/sPereCgQnWQ?si=8OPsM8BTY7RlDg4E
 
@@ -24,7 +25,8 @@ const TournamentData = new Tournament
 //? _PlayersNumber    =    2
 
 gamedata.setCallBack(initMenu)
-TournamentData.setGame(initGameAi)
+gamedata._GameSize = 8
+TournamentData.setGame(initGame4player)
 //TournamentData.setGame(initDevRoom)
 TournamentData.setGameData(gamedata)
 gamedata._keybordMode =  true

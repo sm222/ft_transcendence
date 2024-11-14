@@ -11,9 +11,6 @@ import { initEndGame } from './endGame.js'
 import { GameData   } from './gameSetting.js'
 import { Tournament } from './tournament.js'
 
-import { getLineLen, line2D } from './line.js'
-
-
 const Second        =  60
 const FirstPause    =  (Second * 5)
 
@@ -23,12 +20,15 @@ const BestOf        =  5            // exp: 3, 2 round to win
 const BallSpeedUp   =  (Second * 5)
 let   BallTimer     =  0
 
+const paddlesize    =  2
+const padddeth      =  0.4
+
 let   Round         =  -1
 let   Pause         =  true
 let   PauseTime     =  FirstPause
 let   GameSize      =  15
 let   PlayerSpeed   =  0.15
-let   BallSpeed     =  0.09
+let   BallSpeed     =  0.01
 let   ScoreValue    =  []
 
 let   Players       =  []
@@ -73,7 +73,7 @@ async function makeTrees(gamesize) {
   }
 }
 
-export async function initGame(gamedata, tournamentdata) {
+export async function initGame4player(gamedata, tournamentdata) {
   newGamedata.copy(gamedata)
   newTrounemanData.copy(tournamentdata)
   newGamedata.resetTime()
@@ -118,9 +118,9 @@ export async function initGame(gamedata, tournamentdata) {
   })
   // player
   Players[0] = new Box({
-    width: 2,
+    width: paddlesize,
     height: 0.4,
-    depth: 0.3,
+    depth: padddeth,
     color: newGamedata.getPlayerColor(0),
     velocity: {
       x: 0,
@@ -133,11 +133,10 @@ export async function initGame(gamedata, tournamentdata) {
       z: (GameSize / 2) - (0.5 / 2)
     }
   })
-  
   Players[1] = new Box({
-    width: 2,
+    width: paddlesize,
     height: 0.4,
-    depth: 0.3,
+    depth: padddeth,
     color: newGamedata.getPlayerColor(1),
     velocity: {
       x: 0,
@@ -150,23 +149,41 @@ export async function initGame(gamedata, tournamentdata) {
       z: ((GameSize / 2) * - 1 ) + (0.5 / 2)
     }
   })
-  //Players[2] = new Box({
-  //  width: 0.1,
-  //  height: 0.4,
-  //  depth: newGamedata._GameSize,
-  //  color: 'blue',
-  //  velocity: {
-  //    x: 0,
-  //    y: 0,
-  //    z: 0
-  //  },
-  //  position: {
-  //    x: newGamedata._GameSize  / 2,
-  //    y: -1.5,
-  //    z: 0
-  //  }
-  //})
-  //
+  // - // - // - // - // - // - //
+  Players[2] = new Box({
+    width: padddeth,
+    height: 0.3,
+    depth: paddlesize,
+    color: newGamedata.getPlayerColor(1),
+    velocity: {
+      x: 0,
+      y: -0.01,
+      z: 0
+    },
+    position: {
+      x: ((GameSize / 2) * - 1 ) + (0.5 / 2),
+      y: 0.5,
+      z: 0,
+    }
+  })
+  Players[3] = new Box({
+    width: padddeth,
+    height: 0.3,
+    depth: paddlesize,
+    color: newGamedata.getPlayerColor(1),
+    velocity: {
+      x: 0,
+      y: -0.01,
+      z: 0
+    },
+    position: {
+      x: ((GameSize / 2) * 1 ) - (0.5 / 2),
+      y: 0.5,
+      z: 1,
+    }
+  })
+  
+  // - // - // - // - // - // - //
   Light[0] = new THREE.DirectionalLight(0xffffff, 2)
   Light[0].position.y = 6
   Amlight = new THREE.AmbientLight(0xffffff, 1)
@@ -224,10 +241,7 @@ export async function initGame(gamedata, tournamentdata) {
     obj.setGameSize(newGamedata._GameSize)
     scene.add(obj)
   })
-    //
-
-      //
-  Gaming()
+  Gaming4player()
 }
 
 async function LeaveGame() {
@@ -279,7 +293,7 @@ function score() {
     Round++
   }
   GameTextScore.updateSize(2, 0.4, 12)
-  GameTextScore.updateTxt(String(ScoreValue[1] + '\n' + ScoreValue[0]))
+  GameTextScore.updateTxt(String('  ' + ScoreValue[1] + '\n' + ScoreValue[0]))
   if (ScoreValue[0] >= BestOf / 2 || ScoreValue[1] >= BestOf / 2) {
     newGamedata.setEndScore(ScoreValue)
     GameLoop = 2
@@ -304,12 +318,15 @@ function moveText() {
 function keybordGame(noGame) {
   if (newGamedata._keybordMode) {
     if (noGame) {
+      Players.forEach((player) => { player.update(Map[0])})
       for (let index = 0; index < 2; index++) {
-        Players[index].update(Map[0]);
-        Players[index].position.x = 0
+        const element = Players[index];
+        element.position.x = 0
       }
       return
     }
+    if (keys.space.pressed)
+      Ball[0].speed = 0
     if (keys.a.pressed && Players[0].position.x >
     (GameSize / 2) * -1 + (Players[0].width / 2)) {
       Players[0].velocity.x = PlayerSpeed * -1
@@ -342,7 +359,7 @@ function selecWin(score) {
   return Boolean(score[1] > score[0])
 }
 
-async function Gaming() {
+async function Gaming4player() {
   let end = 0
   keybordGame(Pause)
   moveText()
@@ -397,7 +414,7 @@ async function Gaming() {
   }
   if (GameLoop) {
     Draw()
-    requestAnimationFrame(Gaming)
+    requestAnimationFrame(Gaming4player)
   }
   else {
     // end of the game here
@@ -408,8 +425,7 @@ async function Gaming() {
       newGamedata.getPlayerNameColor(win)])
     const ft = newGamedata.getEndGame()
     newGamedata.setEndScore(ScoreValue)
-    if (ft)
-      ft(newGamedata, newTrounemanData)
+    ft(newGamedata, newTrounemanData)
     return
   }
 }
