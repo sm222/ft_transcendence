@@ -31,6 +31,7 @@ let    endBoard          =  []
 const  font              = 'fonts/Ubuntu Light_Bold.json'
 
 
+const starNumber = 1000
 const range = 400
 const safe = 25
 
@@ -124,7 +125,7 @@ export async function initEndGame(gamedata, tournamentdata)
     zAcceleration:true, opacity:1, transparent: true
   })
 
-  for (let index = 0; index < 1000; index++) {
+  for (let index = 0; index < starNumber; index++) {
     const x = rand(range) - (range / 2)
     const y = rand(range) - (range / 2)
     const z = rand(range) - (range / 2)
@@ -191,9 +192,10 @@ async function EndGameLoop() {
       camera.position.y--
     for (let index = 1; index < Maps.length; index++) {
       let element = Maps[index];
-      element.position.y += speed
-      if (element.position.y > range / 4)
-        element.position.y = (-range / 1.5)
+      element.position.y += speed * 10
+      if (element.position.y > range / 2)
+        element.position.y = (-range / 2)
+      element.makeLineStar()
     }
   }
   if (keys.space.pressed &&  CamX < 1) { Loop = 0 }

@@ -235,7 +235,7 @@ export async function initGame4player(gamedata, tournamentdata) {
     opacity: 0.8
   })
   Ball.forEach(obj => {
-    obj.setSpeed(BallSpeed, BallSpeed)
+    obj.setSpeed(BallSpeed)
     obj.angle = (rand(360))
     obj.castShadow = true
     obj.setGameSize(newGamedata._GameSize)
@@ -325,8 +325,6 @@ function keybordGame(noGame) {
       }
       return
     }
-    if (keys.space.pressed)
-      Ball[0].speed = 0
     if (keys.a.pressed && Players[0].position.x >
     (GameSize / 2) * -1 + (Players[0].width / 2)) {
       Players[0].velocity.x = PlayerSpeed * -1
@@ -394,7 +392,6 @@ async function Gaming4player() {
         Ball[0].angle += LR >= 2 ? 45 : -45
         Pause = false
         PauseTime = PauseTimeDef
-        Ball[0].angle = 180
     }
   }
   if (keys.k.pressed || end == 1 ) { LeaveGame() }

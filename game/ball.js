@@ -80,6 +80,8 @@ export class ball extends Obj {
     this.line2 = null
     this.line3 = null
     this.line4 = null
+    this.star = null
+    this.starColor = null
   }
 
   updateSides() {
@@ -135,11 +137,11 @@ export class ball extends Obj {
       if (this.line2) { this.line2.rm() }
       if (this.line3) { this.line3.rm() }
       if (this.line4) { this.line4.rm() }
-      this.line1 = new line2D(player.position.x + player.width / 2, this.position.z, player.position.x + player.width / 2, this.position.z < player.position.z ? player.position.z + player.depth / 2 : player.position.z - player.depth / 2)
-      this.line2 = new line2D(this.position.x, player.position.z + player.depth / 2, this.position.x < player.position.x ? player.position.x + player.width / 2 : player.position.x - player.width / 2, player.position.z + player.depth / 2)
+      this.line1 = new line2D(player.position.x + player.width / 2, player.position.y + player.height / 2 ,this.position.z, player.position.x + player.width / 2, player.position.y + player.height / 2 ,this.position.z < player.position.z ? player.position.z + player.depth / 2 : player.position.z - player.depth / 2)
+      this.line2 = new line2D(this.position.x, player.position.y + player.height / 2, player.position.z + player.depth / 2, this.position.x < player.position.x ? player.position.x + player.width / 2 : player.position.x - player.width / 2, player.position.y + player.height / 2, player.position.z + player.depth / 2)
       //> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <//
-      this.line3 = new line2D(player.position.x - player.width / 2, player.position.z - player.depth / 2, player.position.x + player.width / 2, player.position.z - player.depth / 2)
-      this.line4 = new line2D(player.position.x - player.width / 2, player.position.z - player.depth / 2, player.position.x - player.width / 2, player.position.z + player.depth / 2)
+      this.line3 = new line2D(player.position.x - player.width / 2 , player.position.y + player.height / 2 , player.position.z - player.depth / 2, player.position.x + player.width / 2, player.position.y + player.height / 2, player.position.z - player.depth / 2)
+      this.line4 = new line2D(player.position.x - player.width / 2 , player.position.y + player.height / 2 , player.position.z - player.depth / 2, player.position.x - player.width / 2, player.position.y + player.height / 2, player.position.z + player.depth / 2)
     //* //
       this.line1.setColor('green')
       this.line2.setColor('pink') // ==== this one 
@@ -164,8 +166,8 @@ export class ball extends Obj {
       //! dot = x1*x2 + y1*y2      # dot product
       //! det = x1*y2 - y1*x2      # determinant
       //! angle = atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
-      const dot = player.position.x *player.position.z + this.position.x * this.position.z
-      const det = player.position.x *player.position.z - this.position.x * this.position.z
+      const dot = player.position.x * player.position.z + this.position.x * this.position.z
+      const det = player.position.x * player.position.z - this.position.x * this.position.z
       const colangle =  Math.atan2(det, dot)
       const res = new THREE.Vector2 (Math.sin(colangle * (_PI_ /180.0)), Math.cos(colangle * ( _PI_ /180.0)))
       res.normalize()
@@ -184,7 +186,7 @@ export class ball extends Obj {
       console.log(res)
       console.log(this.velocity)
           //console.log(colangle)
-      this.setAngleOnHit(this.angle , len < len2 ? 90 : -90) /* //>  - - - - - -*/
+      this.setAngleOnHit(this.angle + colangle, len < len2 ? 90 : -90) /* //>  - - - - - -*/
           //this.angle += (colangle * 3)
           //console.log(colangle)
       //* if      (((paddleVel.y > 0 && copy.y > 0) || (paddleVel.y < 0 && copy.y < 0)) && len > len2 && len + err > (BallSize / 2)) {
@@ -201,7 +203,15 @@ export class ball extends Obj {
   setGameSize(size) {
     this.gameSize = size / 2
   }
-  
+  makeLineStar() {
+    if (this.star)
+      this.star.rm()
+    this.star = new line2D(this.position.x, this.position.y, this.position.z, this.position.x , this.position.y - 10, this.position.z)
+    if (!this.starColor)
+      this.starColor = this.star.setRendColor()
+    this.star.setColor(this.starColor)
+    this.star.DrawLine()
+  }
   getWall() {
     return super.getWall()
   }
@@ -211,6 +221,8 @@ export class ball extends Obj {
   }
 
   kill() {
+  if (this.star)
+      this.star.rm()
     super.kill()
   }
 }
