@@ -394,6 +394,7 @@ async function Gaming4player() {
         Ball[0].angle += LR >= 2 ? 45 : -45
         Pause = false
         PauseTime = PauseTimeDef
+        Ball[0].angle = 180
     }
   }
   if (keys.k.pressed || end == 1 ) { LeaveGame() }

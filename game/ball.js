@@ -115,8 +115,6 @@ export class ball extends Obj {
     const res = [Math.sin(angle * (_PI_ /180.0)), Math.cos(angle * (_PI_ /180.0))]
     this.velocity.x = res[0]
     this.velocity.z = res[1]
-    if (this.velocity.x == 0)
-      this.velocity.x = 1
     // set the side it need to check 
     this.L_R =     this.velocity.x < 0;
     this.up_down = this.velocity.z < 0;
@@ -125,71 +123,70 @@ export class ball extends Obj {
   setAngleOnHit(x ,y) {
     const end = (y - x) + 90
     //this.angle = end //((end > 0) ? (end > 360 ? end - 360 : end) : end)
-    this.angle = ((end < 0 ? end + 360 : end)) // probably don't need that much
+    this.angle = ((end <= 0 ? end + 360 : end)) // probably don't need that much
     this.AngleToVelocity(this.angle)
   }
   applyGravity(player) {
     this.updateSides()
-    if (this.position.x >= this.gameSize && !this.L_R) {
-      this.setAngleOnHit(this.angle , -90)
-    }
-    else if (this.position.x <= (-this.gameSize) && this.L_R) {
-      this.setAngleOnHit(this.angle , -90)
-    } 
-    if (
-      boxCollision({
-        box1: this,
-        box2: player
-      })
-    ) {
-      /*
-        !  console.log(box1.position.x > box2.position.x ? "right" : "left")
-        ?  console.log(box1.position.z > box2.position.z ? "buttom" : "top")
-      */
-        if (this.line1) { this.line1.rm() }
-        if (this.line2) { this.line2.rm() }
-        if (this.line3) { this.line3.rm() }
-        if (this.line4) { this.line4.rm() }
+    if (this.position.x >= this.gameSize && !this.L_R) { this.setAngleOnHit(this.angle , -90) }
+    else if (this.position.x <= (-this.gameSize) && this.L_R) { this.setAngleOnHit(this.angle , -90) } 
+    if ( boxCollision({ box1: this, box2: player })) {
+      if (this.line1) { this.line1.rm() }
+      if (this.line2) { this.line2.rm() }
+      if (this.line3) { this.line3.rm() }
+      if (this.line4) { this.line4.rm() }
       this.line1 = new line2D(player.position.x + player.width / 2, this.position.z, player.position.x + player.width / 2, this.position.z < player.position.z ? player.position.z + player.depth / 2 : player.position.z - player.depth / 2)
       this.line2 = new line2D(this.position.x, player.position.z + player.depth / 2, this.position.x < player.position.x ? player.position.x + player.width / 2 : player.position.x - player.width / 2, player.position.z + player.depth / 2)
-      // - - - - - - - -/
+      //> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - <//
       this.line3 = new line2D(player.position.x - player.width / 2, player.position.z - player.depth / 2, player.position.x + player.width / 2, player.position.z - player.depth / 2)
       this.line4 = new line2D(player.position.x - player.width / 2, player.position.z - player.depth / 2, player.position.x - player.width / 2, player.position.z + player.depth / 2)
     //* //
-      //this.line1.setColor('green')
-      //this.line2.setColor('pink')
-      //this.line3.setColor('orange')
-      //this.line4.setColor('purple')
-      //this.line1.DrawLine()
-      //this.line2.DrawLine()
-      //this.line3.DrawLine()
-      //this.line4.DrawLine()
+      this.line1.setColor('green')
+      this.line2.setColor('pink') // ==== this one 
+      this.line3.setColor('orange')
+      this.line4.setColor('purple')
+      this.line1.DrawLine()
+      this.line2.DrawLine()
+      this.line3.DrawLine()
+      this.line4.DrawLine()
     //* Draw line -  //
       //console.log(player.width, player.depth)
-      const len  = this.line4.getLen() - this.line1.getLen()
-      const len2 = this.line3.getLen() - this.line2.getLen()
+      const len  = this.line4.getLen() - this.line1.getLen() - (this.width)
+      const len2 = this.line3.getLen() - this.line2.getLen() - (this.width)
     // get line diff
       const influance = ((player.velocity.x + player.velocity.z) *  20)  // use z and x for all the paddles
-      //- this.angle += resInflu
       //- this.AngleToVelocity(this.angle)
       //? const res = new THREE.Vector2(Math.sin(this.angle * (_PI_ /180.0)), Math.cos(this.angle * (_PI_ /180.0)))
       //? res.normalize()
       //? console.log(this.velocity)
       //? console.log(this.angle)
       //this.speed = 0.0
-      // ! if (len2 <= this.width) {
-        // !   this.position.x += (this.velocity.x - this.speed)
-        // ! }
-        // ! if (len <= this.depth) {
-          // !   this.position.z += (this.velocity.z - this.speed)
-          // ! }
-      if (((player.velocity.x > 0 && this.velocity.x > 0) || (player.velocity.x < 0 && this.velocity.x < 0)) && len2 > len && len2 > this.width / 2) {
-        console.log(this.speed , this.velocity.x , player.velocity.x , 5)
-        console.log((this.speed * this.velocity.x) + (player.velocity.x * 5))
-        this.position.x += (this.speed * this.velocity.x) + (player.velocity.x * 5);
+      //! dot = x1*x2 + y1*y2      # dot product
+      //! det = x1*y2 - y1*x2      # determinant
+      //! angle = atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
+      const dot = player.position.x *player.position.z + this.position.x * this.position.z
+      const det = player.position.x *player.position.z - this.position.x * this.position.z
+      const colangle =  Math.atan2(det, dot)
+      const res = new THREE.Vector2 (Math.sin(colangle * (_PI_ /180.0)), Math.cos(colangle * ( _PI_ /180.0)))
+      res.normalize()
+      //console.log(res)
+      const err = this.width / 2
+      if      (((player.velocity.x > 0 && this.velocity.x > 0) || (player.velocity.x < 0 && this.velocity.x < 0)) && len2 > len && len2 > this.width + err) {
+        //this.position.x += 
+        console.log("ici")
       }
-      else
-        this.setAngleOnHit(this.angle + influance, len < len2 ? 90 : -90)
+      else if (((player.velocity.z > 0 && this.velocity.z > 0) || (player.velocity.z < 0 && this.velocity.z < 0)) && len > len2 && len  > this.width + err) {
+        //this.position.z += 1
+        console.log("ici2")
+      }
+      //else
+      //this.angle = colangle
+      console.log(res)
+      console.log(this.velocity)
+          //console.log(colangle)
+      this.setAngleOnHit(this.angle , len < len2 ? 90 : -90) /* //>  - - - - - -*/
+          //this.angle += (colangle * 3)
+          //console.log(colangle)
       //* if      (((paddleVel.y > 0 && copy.y > 0) || (paddleVel.y < 0 && copy.y < 0)) && len > len2 && len + err > (BallSize / 2)) {
       //*   y += ((paddleVel.y * paddle_speed ) + (speed * copy.y));
       //* }
@@ -197,12 +194,9 @@ export class ball extends Obj {
       //*   x += ((paddleVel.x * paddle_speed ) + (speed * copy.x));
       //* }
       //* else {
-      //*   round = newR + paddleVel.x + paddleVel.y;
-      //* }
-    }
-    else {
-      //!
-    }
+        //*   round = newR + paddleVel.x + paddleVel.y;
+        //* }
+      }
   }
   setGameSize(size) {
     this.gameSize = size / 2
