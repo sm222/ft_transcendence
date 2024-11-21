@@ -31,9 +31,10 @@ let    endBoard          =  []
 const  font              = 'fonts/Ubuntu Light_Bold.json'
 
 
-const starNumber = 1000
-const range = 400
-const safe = 25
+const  starNumber        =  100
+const  range             =  400
+const  safe              =  25
+let    addStarN          =  0
 
 let    Moon              =  null
 let    MoonSpin          =  0
@@ -97,12 +98,37 @@ function winer() {
   Texts[Texts.length - 1].rotate(-90,0,0)
 }
 
+
+async function addStar(nb) {
+  if (Maps.length > 1000) {
+    return
+  }
+  console.log("add ", nb)
+  for (let index = 0; index < nb; index++) {
+    const x = rand(range) - (range / 2)
+    const y = rand(range) - (range / 2)
+    const z = rand(range) - (range / 2)
+    if (/*(y < safe && y > safe * -1) ||*/ (z < safe && z > safe * -1) || (x < safe && x > safe * -1) ) {
+      index--
+      continue
+    }
+    Maps.push( new ball({
+      width: 1, height: 0.5, depth: 1,
+      color: 'white',
+      position: { x: x, y: y, z: z },
+      zAcceleration:false, opacity:1, transparent: false
+    }))
+    scene.add(Maps[Maps.length - 1])
+  }
+  console.log(Maps.length)
+}
+
 export async function initEndGame(gamedata, tournamentdata)
 {
   newGamedata.copy(gamedata)
   newTrounemanData.copy(tournamentdata)
   //
-
+  addStarN = 0
   CamX = 5
   MoonSpin = 0
   speed = 0
@@ -188,15 +214,23 @@ async function EndGameLoop() {
   else {
     //range = 400
     //safe = 100
+    //console.log(MoonSpin % 2)
+    if (addStarN < Maps.length * 4) {
+      addStarN++
+    } else {
+      addStar(Maps.length / 4)
+      addStarN = 0
+    }
+    Moon.position.y -= 0.0005
     if (camera.position.y > 20)
       camera.position.y--
-    for (let index = 1; index < Maps.length; index++) {
-      let element = Maps[index];
-      element.position.y += speed * 10
-      if (element.position.y > range / 2)
-        element.position.y = (-range / 2)
-      element.makeLineStar()
     }
+  for (let index = 1; index < Maps.length; index++) {
+    let element = Maps[index];
+    element.position.y += speed
+    if (element.position.y > range / 2)
+      element.position.y = (-range / 2) + (-MoonSpin / 3)
+    element.makeLineStar(speed * 10)
   }
   if (keys.space.pressed &&  CamX < 1) { Loop = 0 }
   if (Loop) {

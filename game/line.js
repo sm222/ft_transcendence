@@ -30,10 +30,12 @@ export class line2D {
         return (getLineLen(this.a, this.b))
     }
     DrawLine() {
-        if (!this.color)
-            this.Linematerial = new THREE.LineBasicMaterial( { color: rand(0xffffff) } );
-        else
-        this.Linematerial = new THREE.LineBasicMaterial( { color: this.color } );
+        if (!this.Linematerial) {
+            if (!this.color)
+                this.Linematerial = new THREE.LineBasicMaterial( { color: rand(0xffffff) } );
+            else
+                this.Linematerial = new THREE.LineBasicMaterial( { color: this.color } );
+        }
         this.points.push( new THREE.Vector3( this.a.x, this.a.y, this.a.z) );
         this.points.push( new THREE.Vector3( this.b.x, this.b.y, this.b.z) );
         this.Linegeometry = new THREE.BufferGeometry().setFromPoints( this.points );
