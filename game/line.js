@@ -3,8 +3,8 @@ import { scene, camera, Draw, SetCamMode } from './render.js'
 
 
 
-export function getLineLen(a , b) {
-    return (Math.sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y)))
+export function getLineLen(a , b) { // z and not y 
+    return (Math.sqrt((b.x - a.x) * (b.x - a.x) + (b.z - a.z) * (b.z - a.z)))
 }
 
 
@@ -13,7 +13,7 @@ function rand(max) {
 }
 
 export class line2D {
-    constructor (aX, aY, aZ, bX, bY, bZ) {
+    constructor (aX, aY, aZ, bX, bY, bZ) { // i hate js so mutch get me out of here, give me c, c++ or c# , jave i don't care just stop that nightmare 
         this.y = 0
         this.a = new THREE.Vector3(aX, aY ,aZ)
         this.b = new THREE.Vector3(bX, bY ,bZ)

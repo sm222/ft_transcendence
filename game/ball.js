@@ -143,8 +143,8 @@ export class ball extends Obj {
       this.line3 = new line2D(player.position.x - player.width / 2 , player.position.y + player.height / 2 , player.position.z - player.depth / 2, player.position.x + player.width / 2, player.position.y + player.height / 2, player.position.z - player.depth / 2)
       this.line4 = new line2D(player.position.x - player.width / 2 , player.position.y + player.height / 2 , player.position.z - player.depth / 2, player.position.x - player.width / 2, player.position.y + player.height / 2, player.position.z + player.depth / 2)
     //* //
-      this.line1.setColor('green')
-      this.line2.setColor('pink') // ==== this one 
+      this.line1.setColor('green') // ?
+      this.line2.setColor('pink')  // ? this one 
       this.line3.setColor('orange')
       this.line4.setColor('purple')
       this.line1.DrawLine()
@@ -153,8 +153,8 @@ export class ball extends Obj {
       this.line4.DrawLine()
     //* Draw line -  //
       //console.log(player.width, player.depth)
-      const len  = this.line4.getLen() - this.line1.getLen() + (this.width)
-      const len2 = this.line3.getLen() - this.line2.getLen() + (this.width)
+      const len  = this.line4.getLen() - this.line1.getLen()// + (this.width)
+      const len2 = this.line3.getLen() - this.line2.getLen()// + (this.width)
     // get line diff
       const influance = ((player.velocity.x + player.velocity.z) *  20)  // use z and x for all the paddles
       //! dot = x1*x2 + y1*y2      # dot product
@@ -164,18 +164,19 @@ export class ball extends Obj {
       const det = player.position.x * player.position.z - this.position.x * this.position.z
       const colangle =  Math.atan2(det, dot)
       //console.log(res)
-      const err = this.width / 2
-      if      (((player.velocity.x > 0 && this.velocity.x > 0) || (player.velocity.x < 0 && this.velocity.x < 0)) && len2 > len && len2 > this.width + err) {
-        //this.position.x += 
-        console.log("ici")
-      }
-      else if (((player.velocity.z > 0 && this.velocity.z > 0) || (player.velocity.z < 0 && this.velocity.z < 0)) && len > len2 && len  > this.width + err) {
-        //this.position.z += 1
-        console.log("ici2")
-      }
+      //const err = this.width / 2
+      //if      (((player.velocity.x > 0 && this.velocity.x > 0) || (player.velocity.x < 0 && this.velocity.x < 0)) && len2 > len && len2 > this.width + err) {
+      //  //this.position.x += 
+      //  console.log("ici")
+      //}
+      //else if (((player.velocity.z > 0 && this.velocity.z > 0) || (player.velocity.z < 0 && this.velocity.z < 0)) && len > len2 && len  > this.width + err) {
+      //  //this.position.z += 1
+      //  console.log("ici2")
+      //}
       //else
       //this.angle = colangle
           //console.log(colangle)
+      console.log(this.line1.getLen(), this.line2.getLen(), this.line3.getLen(), this.line4.getLen())
       this.setAngleOnHit(this.angle, len < len2 ? 90 : -90) /* //>  - - - - - -*/
       this.angle += -colangle + -influance
           //console.log(colangle)

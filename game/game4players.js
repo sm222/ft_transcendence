@@ -21,7 +21,7 @@ const BallSpeedUp   =  (Second * 5)
 let   BallTimer     =  0
 
 const paddlesize    =  2
-const padddeth      =  0.4
+const padddeth      =  0.5
 
 let   Round         =  -1
 let   Pause         =  true
