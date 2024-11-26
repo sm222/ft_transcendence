@@ -11,7 +11,7 @@ import { initEndGame } from './endGame.js'
 import { GameData   } from './gameSetting.js'
 import { Tournament } from './tournament.js'
 
-import { getLineLen, line2D } from './line.js'
+import { getLineLen, line3D } from './line.js'
 
 
 const Second        =  60

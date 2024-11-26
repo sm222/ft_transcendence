@@ -5,8 +5,8 @@ import { keys } from        './keybord.js'
 import { Text } from        './text.js'
 import { ball } from        './ball.js'
 import { MODEL3D } from     './Import3D.js'
-import { endScore} from     './endGame.js'
 import { initEndGame } from './endGame.js'
+import { getLineLen, line3D } from './line.js'
 
 import { GameData   } from './gameSetting.js'
 import { Tournament } from './tournament.js'
@@ -30,6 +30,8 @@ let   GameSize      =  15
 let   PlayerSpeed   =  0.15
 let   BallSpeed     =  0.01
 let   ScoreValue    =  []
+
+let   Lines         =  []
 
 let   Players       =  []
 let   Map           =  []
@@ -184,6 +186,18 @@ export async function initGame4player(gamedata, tournamentdata) {
   })
   
   // - // - // - // - // - // - //
+  Lines.push(new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 + padddeth, 
+                        -padddeth + newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 + padddeth))
+  Lines.push(new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
+                        -padddeth + newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth))
+  Lines.push(new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
+                        padddeth + -newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 - -padddeth))
+  Lines.push(new line3D(-padddeth + newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
+                        -padddeth + newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 - -padddeth))
+  Lines.forEach(line => {
+    line.setColor('yellow')
+    line.DrawLine()
+  });
   Light[0] = new THREE.DirectionalLight(0xffffff, 2)
   Light[0].position.y = 6
   Amlight = new THREE.AmbientLight(0xffffff, 1)
@@ -272,6 +286,9 @@ async function LeaveGame() {
   GameTextScore.kill()
   scene.remove(Snow)
   Snow.kill()
+  Lines.forEach(line => {
+    line.rm()
+  });
 }
 
 
@@ -313,7 +330,6 @@ function moveText() {
   })
 }
 
-// await new Promise(r => setTimeout(r, 1000));
 
 function keybordGame(noGame) {
   if (newGamedata._keybordMode) {
@@ -325,22 +341,22 @@ function keybordGame(noGame) {
       }
       return
     }
-    if (keys.a.pressed && Players[0].position.x >
-    (GameSize / 2) * -1 + (Players[0].width / 2)) {
-      Players[0].velocity.x = PlayerSpeed * -1
+    if (keys.a.pressed && Players[0].position.x > (GameSize / 2) * -1 + (Players[0].width / 2) + padddeth) {
+      Players[0].velocity.x = PlayerSpeed * -1 
     }
-    else if (keys.d.pressed && Players[0].position.x < (GameSize / 2) - (Players[0].width / 2)) { 
-      Players[0].velocity.x = PlayerSpeed }
-    if (keys.left.pressed && Players[1].position.x > (GameSize / 2) * -1 + (Players[1].width / 2)) {
+    else if (keys.d.pressed && Players[0].position.x < (GameSize / 2) - (Players[0].width / 2) - padddeth) {
+      Players[0].velocity.x = PlayerSpeed
+    }
+    if (keys.left.pressed && Players[1].position.x > (GameSize / 2) * -1 + (Players[1].width / 2) + padddeth) {
       Players[1].velocity.x = PlayerSpeed * -1
     }
-    else if (keys.right.pressed && Players[1].position.x < (GameSize / 2) - (Players[1].width / 2)) {
+    else if (keys.right.pressed && Players[1].position.x < (GameSize / 2) - (Players[1].width / 2) - padddeth) {
         Players[1].velocity.x = PlayerSpeed
     }
+    //
     Players.forEach((player) => { player.update(Map[0])})
   }
 }
-
 
 // funny
 function moveTrees(gamesize) {

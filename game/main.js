@@ -25,7 +25,7 @@ const TournamentData = new Tournament
 //? _PlayersNumber    =    2
 
 gamedata.setCallBack(initMenu)
-gamedata._GameSize = 8
+gamedata._GameSize = 10
 TournamentData.setGame(initGame4player)
 //TournamentData.setGame(initDevRoom)
 TournamentData.setGameData(gamedata)
