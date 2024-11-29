@@ -44,6 +44,9 @@ let   Light         =  []
 let   Amlight       =  []
 let   GameText      =  []
 let   WinRound      =  0
+// 4 players
+let   NbLifes       =  3
+let   Lifes         =  []
 
 let   GameLoop      =  1
 
@@ -72,6 +75,25 @@ async function makeTrees(gamesize) {
         k++
       }
     }
+  }
+}
+
+function makeLine(index) {
+  switch (index) {
+    case 0:
+      return (new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 + padddeth, 
+        -padddeth + newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 + padddeth))
+    case 1:
+      return (new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
+        -padddeth + newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth))
+    case 2:
+        return (new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
+          padddeth + -newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 - -padddeth))
+    case 3:
+        return (new line3D(-padddeth + newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
+          -padddeth + newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 - -padddeth))
+    default:
+      break;
   }
 }
 
@@ -184,16 +206,11 @@ export async function initGame4player(gamedata, tournamentdata) {
       z: 1,
     }
   })
-  
+  for (let index = 0; index < 4; index++) { 
+    Lifes[index] = NbLifes; 
+    Lines[index] = makeLine(index)
+  }
   // - // - // - // - // - // - //
-  Lines.push(new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 + padddeth, 
-                        -padddeth + newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 + padddeth))
-  Lines.push(new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
-                        -padddeth + newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth))
-  Lines.push(new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
-                        padddeth + -newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 - -padddeth))
-  Lines.push(new line3D(-padddeth + newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
-                        -padddeth + newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 - -padddeth))
   Lines.forEach(line => {
     line.setColor('yellow')
     line.DrawLine()
@@ -212,7 +229,7 @@ export async function initGame4player(gamedata, tournamentdata) {
     scene.add(player)
   })
   //
-  Map.forEach(obj => {
+  Map.forEach (obj => {
     //obj.receiveShadow = true
     scene.add(obj)
   })
@@ -250,7 +267,8 @@ export async function initGame4player(gamedata, tournamentdata) {
   })
   Ball.forEach(obj => {
     obj.setSpeed(BallSpeed)
-    obj.angle = (rand(360))
+    obj.angle = (rand(360) % 359)
+    console.log(obj.angle)
     obj.castShadow = true
     obj.setGameSize(newGamedata._GameSize)
     scene.add(obj)
@@ -288,26 +306,58 @@ async function LeaveGame() {
   Snow.kill()
   Lines.forEach(line => {
     line.rm()
-  });
+  })
 }
 
 
 function score() {
   Ball.forEach(b => {
+    if (b.position.x >=  newGamedata._GameSize / 2 && !b.L_R) { b.setAngleOnHit(b.angle, -90)}
+    if (b.position.x <= -newGamedata._GameSize / 2 &&  b.L_R) { b.setAngleOnHit(b.angle, -90)}
     Players.forEach(p => {
       b.applyGravity(p)
     })
     b.update()
-    WinRound =  b.playerPoin()
+    //WinRound =  b.playerPoin()
   })
-  if (WinRound !== 0) {
-    Pause = true
-    Ball[0].setSpeed(BallSpeed)
-    if (WinRound > 0)
-      ScoreValue[1]++
-    else
-      ScoreValue[0]++
-    Round++
+  let hit = 0
+  if (Ball[0].position.z < padddeth + -newGamedata._GameSize / 2) {
+    Lines[0].rm()
+    Lines[0] = makeLine(0)
+    Lines[0].setColor('red')
+    Lines[0].DrawLine();
+    hit = 1;
+    Lifes[0]--
+  }
+  if (Ball[0].position.z > -padddeth + newGamedata._GameSize / 2) {
+    Lines[1].rm()
+    Lines[1] = makeLine(1)
+    Lines[1].setColor('red')
+    Lines[1].DrawLine();
+    hit = 1;
+    Lifes[1]--
+  }
+  if (Ball[0].position.x < -newGamedata._GameSize / 2 + padddeth) {
+    Lines[2].rm()
+    Lines[2] = makeLine(2)
+    Lines[2].setColor('red')
+    Lines[2].DrawLine();
+    hit = 1;
+    Lifes[2]--
+  }
+  if (Ball[0].position.x > newGamedata._GameSize / 2 + -padddeth) {
+    Lines[3].rm()
+    Lines[3] = makeLine(3)
+    Lines[3].setColor('red')
+    Lines[3].DrawLine();
+    hit = 1;
+    Lifes[3]--
+  }
+  hit = 0;
+  if (hit) {
+    Ball[0].position.z = 0
+    Ball[0].position.x = 0
+    Ball[0].speed = 0
   }
   GameTextScore.updateSize(2, 0.4, 12)
   GameTextScore.updateTxt(String('  ' + ScoreValue[1] + '\n' + ScoreValue[0]))
@@ -378,9 +428,19 @@ async function Gaming4player() {
   keybordGame(Pause)
   moveText()
   if (!Pause && GameLoop != 2) {
-    end = score()
+    end = 0
+    score()
     if (BallTimer == BallSpeedUp) {
       BallTimer = 0
+      if (Ball[0].speed == 0) {
+        for (let index = 0; index < 4; index++) {
+          Lines[index].rm()
+          Lines[index] = makeLine(index)
+          Lines[index].setColor('yellow')
+          Lines[index].DrawLine();
+          Ball[0].angle = (rand(360) % 359)
+        }
+      }
       Ball[0].speed += 0.01
     }
     BallTimer++
@@ -402,10 +462,8 @@ async function Gaming4player() {
       GameTextScore.updateSize(2, 0.4, 12)
       GameTextScore.updateTxt(String(timer))
       if (PauseTime == 0) {
-        const ballStartR = rand(4)
-        Ball[0].angle = ballStartR >= 2 ? 0 : 180
-        const LR = rand(4)
-        Ball[0].angle += LR >= 2 ? 45 : -45
+        Ball[0].angle = (rand(360) % 359)
+        console.log(Ball[0].angle)
         Pause = false
         PauseTime = PauseTimeDef
     }
@@ -414,6 +472,7 @@ async function Gaming4player() {
   //if (keys.space.pressed) { moveTrees(10) }
   Players.forEach(player => {
     player.velocity.x = 0
+    player.velocity.z = 0
   })
   if (GameLoop == 2) {
     SetCamMode(false)

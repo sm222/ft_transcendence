@@ -30,6 +30,8 @@ export class line3D {
     return (getLineLen(this.a, this.b))
   }
   DrawLine() {
+    if (this.line)
+      scene.remove(this.line)
     if (!this.Linematerial) {
       if (!this.color)
         this.Linematerial = new THREE.LineBasicMaterial( { color: rand(0xffffff) } );

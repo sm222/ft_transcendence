@@ -104,15 +104,8 @@ export class ball extends Obj {
     this.speed = _speed
   }
   playerPoin() {
-    let p = 0
-    const dis = 1
-    if (this.position.z < -this.gameSize * dis || this.position.z > this.gameSize * dis) {
-      p = Number(this.position.z)
-      this.position.z = 0
-      this.position.x = 0
+    alert("replace me")
     }
-    return p
-  }
   AngleToVelocity(angle) {
     const res = [Math.sin(angle * (Math.PI /180.0)), Math.cos(angle * (Math.PI /180.0))]
     this.velocity.x = res[0]
@@ -130,8 +123,8 @@ export class ball extends Obj {
   }
   applyGravity(player) {
     this.updateSides()
-    if (this.position.x >= this.gameSize && !this.L_R) { this.setAngleOnHit(this.angle , -90) }
-    else if (this.position.x <= (-this.gameSize) && this.L_R) { this.setAngleOnHit(this.angle , -90) } 
+    //if (this.position.x >= this.gameSize && !this.L_R) { this.setAngleOnHit(this.angle , -90) }
+    //else if (this.position.x <= (-this.gameSize) && this.L_R) { this.setAngleOnHit(this.angle , -90) } 
     if ( boxCollision({ box1: this, box2: player })) {
       if (this.line1) { this.line1.rm(); this.line1 = null }
       if (this.line2) { this.line2.rm(); this.line2 = null }

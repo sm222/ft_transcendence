@@ -23,6 +23,11 @@ const BestOf        =  5            // exp: 3, 2 round to win
 const BallSpeedUp   =  (Second * 5)
 let   BallTimer     =  0
 
+const paddlesize    =  2
+const padddeth      =  0.5
+
+let   Lines         =  []
+
 let   Round         =  -1
 let   Pause         =  true
 let   PauseTime     =  FirstPause
@@ -70,6 +75,25 @@ async function makeTrees(gamesize) {
         k++
       }
     }
+  }
+}
+
+function makeLine(index) {
+  switch (index) {
+    case 0:
+      return (new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 + padddeth, 
+        -padddeth + newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 + padddeth))
+    case 1:
+      return (new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
+        -padddeth + newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth))
+    case 2:
+        return (new line3D(padddeth + -newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
+          padddeth + -newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 - -padddeth))
+    case 3:
+        return (new line3D(-padddeth + newGamedata._GameSize / 2, -1.2, newGamedata._GameSize / 2 - padddeth, 
+          -padddeth + newGamedata._GameSize / 2, -1.2, -newGamedata._GameSize / 2 - -padddeth))
+    default:
+      break;
   }
 }
 
@@ -150,22 +174,12 @@ export async function initGame(gamedata, tournamentdata) {
       z: ((GameSize / 2) * - 1 ) + (0.5 / 2)
     }
   })
-  //Players[2] = new Box({
-  //  width: 0.1,
-  //  height: 0.4,
-  //  depth: newGamedata._GameSize,
-  //  color: 'blue',
-  //  velocity: {
-  //    x: 0,
-  //    y: 0,
-  //    z: 0
-  //  },
-  //  position: {
-  //    x: newGamedata._GameSize  / 2,
-  //    y: -1.5,
-  //    z: 0
-  //  }
-  //})
+  //
+  for (let index = 0; index < 2; index++) {
+    Lines[index] = makeLine(index)
+    Lines[index].setColor('yellow')
+    Lines[index].DrawLine()
+  }
   //
   Light[0] = new THREE.DirectionalLight(0xffffff, 2)
   Light[0].position.y = 6
@@ -258,16 +272,32 @@ async function LeaveGame() {
   GameTextScore.kill()
   scene.remove(Snow)
   Snow.kill()
+  Lines.forEach(line => {
+    line.rm()
+  })
 }
 
+function playerPoin(b) {
+  let p = 0
+  const dis = (newGamedata._GameSize / 2)
+  if (b.position.z < -dis + padddeth || b.position.z > dis - padddeth) {
+    p = Number(b.position.z)
+    b.position.x = 0
+    b.position.z = 0
+    return p
+  }
+  return p
+}
 
 function score() {
   Ball.forEach(b => {
+    if (b.position.x >=  newGamedata._GameSize / 2 && !b.L_R) { b.setAngleOnHit(b.angle, -90)}
+    if (b.position.x <= -newGamedata._GameSize / 2 &&  b.L_R) { b.setAngleOnHit(b.angle, -90)}
     Players.forEach(p => {
       b.applyGravity(p)
     })
     b.update()
-    WinRound =  b.playerPoin()
+    WinRound = playerPoin(b)
   })
   if (WinRound !== 0) {
     Pause = true
