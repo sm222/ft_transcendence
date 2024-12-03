@@ -73,8 +73,8 @@ function nextGame() {
     Texts[index + 1].rotate(-90,0,0)
   }
   const gameTime = newGamedata.getTime()
-  Texts.push(new Text(scene, {x:0, y:8, z:4}, String("Time play: m" + gameTime[0] + ":s" + gameTime[1])))
-  Texts[Texts.length - 1].rotate(-90,0,0)
+  //Texts.push(new Text(scene, {x:0, y:8, z:4}, String("Time play: m" + gameTime[0] + ":s" + gameTime[1])))
+  //Texts[Texts.length - 1].rotate(-90,0,0)
   Texts.push(new Text(scene, {x:0,  y:8, z:5}, String("press space to continue")))
   Texts[Texts.length - 1].rotate(-90,0,0)
 }
@@ -93,9 +93,9 @@ function winer() {
   Texts[Texts.length - 1].rotate(-90,0,0)
   Texts.push(new Text(scene, {x:ofSet ,y:8,z:-(1.2)}, String(endBoard[0][1] + ' : ' + endBoard[0][0]), endBoard[0][2], font, 1))
   Texts[Texts.length - 1].rotate(-90,0,0)
-  const gameTime = newGamedata.getTime()
-  Texts.push(new Text(scene, {x:0, y:8, z:4}, String("Time play: m" + gameTime[0] + ":s" + gameTime[1])))
-  Texts[Texts.length - 1].rotate(-90,0,0)
+  //const gameTime = newGamedata.getTime()
+  //Texts.push(new Text(scene, {x:0, y:8, z:4}, String("Time play: m" + gameTime[0] + ":s" + gameTime[1])))
+  //Texts[Texts.length - 1].rotate(-90,0,0)
 }
 
 
@@ -159,7 +159,7 @@ export async function initEndGame(gamedata, tournamentdata)
       index--
       continue
     }
-    Maps.push( new ball({
+    Maps.push(new ball({
       width: 1, height: 0.5, depth: 1,
       color: 'white',
       position: { x: x, y: y, z: z },
@@ -207,11 +207,15 @@ async function EndGameLoop() {
   speed += 0.0001
   SetCamMode(false)
   Moon.rotate(MoonSpin, 0 , MoonSpin)
-  if (CamX > 0) {
+  if (Loop == 1 && CamX > 0) {
     camera.rotateX(CamX / 200)
     CamX -= 0.05
   }
   else {
+    if (Loop == 1)
+    Loop = 2
+  }
+  if (Loop == 2) {
     //range = 400
     //safe = 100
     //console.log(MoonSpin % 2)
@@ -232,7 +236,13 @@ async function EndGameLoop() {
       element.position.y = (-range / 2) + (-MoonSpin / 3)
     element.makeLineStar(speed * 10)
   }
-  if (keys.space.pressed &&  CamX < 1) { Loop = 0 }
+  if (keys.space.pressed &&  CamX < 1 && Loop == 2 && camera.position.y == 20) { Loop = 3 }
+  if (Loop == 3 && CamX < 1) {
+    camera.rotation.x -= 0.03
+    if (camera.rotation.x < -3.5)
+      Loop = 0
+    console.log(camera.rotation.x)
+  }
   if (Loop) {
     Draw()
     requestAnimationFrame(EndGameLoop)

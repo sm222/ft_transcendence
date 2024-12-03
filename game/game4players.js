@@ -127,9 +127,9 @@ export async function initGame4player(gamedata, tournamentdata) {
     transparent: true
   })
   Snow = new Box({
-    width: GameSize * 25,
+    width: GameSize * 100,
     height: 0.5,
-    depth: GameSize * 25,
+    depth: GameSize * 100,
     color: '#3d3e40',
     position: {
       x: 0,
@@ -314,6 +314,8 @@ function score() {
   Ball.forEach(b => {
     if (b.position.x >=  newGamedata._GameSize / 2 && !b.L_R) { b.setAngleOnHit(b.angle, -90)}
     if (b.position.x <= -newGamedata._GameSize / 2 &&  b.L_R) { b.setAngleOnHit(b.angle, -90)}
+    if (b.position.z >=  newGamedata._GameSize / 2 && !b.up_down) { b.setAngleOnHit(b.angle, 90)}
+    if (b.position.z <= -newGamedata._GameSize / 2 &&  b.up_down) { b.setAngleOnHit(b.angle, 90)}
     Players.forEach(p => {
       b.applyGravity(p)
     })
@@ -321,23 +323,24 @@ function score() {
     //WinRound =  b.playerPoin()
   })
   let hit = 0
-  if (Ball[0].position.z < padddeth + -newGamedata._GameSize / 2) {
+  if (Ball[0].position.z < padddeth + -newGamedata._GameSize / 2 && Lifes[1]) {
     Lines[0].rm()
     Lines[0] = makeLine(0)
     Lines[0].setColor('red')
     Lines[0].DrawLine();
     hit = 1;
-    Lifes[0]--
+    Lifes[1]--
   }
-  if (Ball[0].position.z > -padddeth + newGamedata._GameSize / 2) {
+  if (Ball[0].position.z > -padddeth + newGamedata._GameSize / 2 && Lifes[0]) {
     Lines[1].rm()
     Lines[1] = makeLine(1)
     Lines[1].setColor('red')
     Lines[1].DrawLine();
     hit = 1;
-    Lifes[1]--
+    Lifes[0]--
+    
   }
-  if (Ball[0].position.x < -newGamedata._GameSize / 2 + padddeth) {
+  if (Ball[0].position.x < -newGamedata._GameSize / 2 + padddeth && Lifes[2]) {
     Lines[2].rm()
     Lines[2] = makeLine(2)
     Lines[2].setColor('red')
@@ -345,7 +348,7 @@ function score() {
     hit = 1;
     Lifes[2]--
   }
-  if (Ball[0].position.x > newGamedata._GameSize / 2 + -padddeth) {
+  if (Ball[0].position.x > newGamedata._GameSize / 2 + -padddeth && Lifes[3]) {
     Lines[3].rm()
     Lines[3] = makeLine(3)
     Lines[3].setColor('red')
@@ -353,14 +356,21 @@ function score() {
     hit = 1;
     Lifes[3]--
   }
-  hit = 0;
   if (hit) {
+    for (let index = 0; index < 4; index++) {
+      if (!Lifes[index]) {
+        Players[index].position.x =  0
+        Players[index].position.z =  0
+        Players[index].position.y = -200000000
+      }
+    }
     Ball[0].position.z = 0
     Ball[0].position.x = 0
+    BallTimer = BallSpeedUp / 2
     Ball[0].speed = 0
   }
   GameTextScore.updateSize(2, 0.4, 12)
-  GameTextScore.updateTxt(String('  ' + ScoreValue[1] + '\n' + ScoreValue[0]))
+  GameTextScore.updateTxt(String(Lifes[0] + ' ' + Lifes[1] + ' ' + Lifes[2] + ' ' + Lifes[3]))
   if (ScoreValue[0] >= BestOf / 2 || ScoreValue[1] >= BestOf / 2) {
     newGamedata.setEndScore(ScoreValue)
     GameLoop = 2

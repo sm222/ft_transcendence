@@ -127,9 +127,9 @@ export async function initGame(gamedata, tournamentdata) {
     transparent: true
   })
   Snow = new Box({
-    width: GameSize * 25,
+    width: GameSize * 100,
     height: 0.5,
-    depth: GameSize * 25,
+    depth: GameSize * 100,
     color: '#3d3e40',
     position: {
       x: 0,
@@ -280,7 +280,7 @@ async function LeaveGame() {
 function playerPoin(b) {
   let p = 0
   const dis = (newGamedata._GameSize / 2)
-  if (b.position.z < -dis + padddeth || b.position.z > dis - padddeth) {
+  if (b.position.z < -dis  || b.position.z > dis) {
     p = Number(b.position.z)
     b.position.x = 0
     b.position.z = 0
@@ -405,6 +405,7 @@ async function Gaming() {
         Ball[0].angle = ballStartR >= 2 ? 0 : 180
         const LR = rand(4)
         Ball[0].angle += LR >= 2 ? 45 : -45
+        Ball[0].AngleToVelocity(Ball[0].angle)
         Pause = false
         PauseTime = PauseTimeDef
     }
