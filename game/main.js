@@ -26,7 +26,7 @@ const TournamentData = new Tournament
 
 gamedata.setCallBack(initMenu)
 gamedata._GameSize = 10
-TournamentData.setGame(initGame)
+TournamentData.setGame(initGame4player)
 //TournamentData.setGame(initDevRoom)
 TournamentData.setGameData(gamedata)
 gamedata._keybordMode =  true

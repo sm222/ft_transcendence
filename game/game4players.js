@@ -401,16 +401,31 @@ function keybordGame(noGame) {
       }
       return
     }
-    if (keys.a.pressed && Players[0].position.x > (GameSize / 2) * -1 + (Players[0].width / 2) + padddeth) {
+    if (keys.q.pressed && Players[2].position.z > (GameSize / 2) * -1 + (Players[2].depth / 2) + padddeth) {
+      Players[2].velocity.z = PlayerSpeed * -1 
+    }
+    else if (keys.a.pressed && Players[2].position.z < (GameSize / 2) - (Players[2].depth / 2) - padddeth) {
+      Players[2].velocity.z = PlayerSpeed
+    }
+    //
+    if (keys.o.pressed && Players[3].position.z > (GameSize / 2) * -1 + (Players[3].depth / 2) + padddeth) {
+      Players[3].velocity.z = PlayerSpeed * -1 
+    }
+    else if (keys.l.pressed && Players[3].position.z < (GameSize / 2) - (Players[3].depth / 2) - padddeth) {
+      Players[3].velocity.z = PlayerSpeed
+    }
+    //
+    if (keys.z.pressed && Players[0].position.x > (GameSize / 2) * -1 + (Players[0].width / 2) + padddeth) {
       Players[0].velocity.x = PlayerSpeed * -1 
     }
-    else if (keys.d.pressed && Players[0].position.x < (GameSize / 2) - (Players[0].width / 2) - padddeth) {
+    else if (keys.x.pressed && Players[0].position.x < (GameSize / 2) - (Players[0].width / 2) - padddeth) {
       Players[0].velocity.x = PlayerSpeed
     }
-    if (keys.left.pressed && Players[1].position.x > (GameSize / 2) * -1 + (Players[1].width / 2) + padddeth) {
+
+    if (keys.n.pressed && Players[1].position.x > (GameSize / 2) * -1 + (Players[1].width / 2) + padddeth) {
       Players[1].velocity.x = PlayerSpeed * -1
     }
-    else if (keys.right.pressed && Players[1].position.x < (GameSize / 2) - (Players[1].width / 2) - padddeth) {
+    else if (keys.m.pressed && Players[1].position.x < (GameSize / 2) - (Players[1].width / 2) - padddeth) {
         Players[1].velocity.x = PlayerSpeed
     }
     //

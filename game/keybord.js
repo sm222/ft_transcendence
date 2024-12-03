@@ -1,25 +1,18 @@
 export const keys = {
-  a: {
-    pressed: false
-  },
-  d: {
-    pressed: false
-  },
-  left: {
-    pressed: false
-  },
-  right: {
-    pressed: false
-  },
-  space: {
-    pressed: false
-  },
-  k: {
-    pressed: false
-  },
-  Enter: {
-    pressed: false
-  }
+  a: { pressed: false },
+  d: { pressed: false },
+  left: { pressed: false },
+  right: { pressed: false},
+  space: {pressed: false },
+  k: {pressed: false },
+  Enter: {pressed: false },
+  q: {pressed: false },
+  z: {pressed: false },
+  x: {pressed: false },
+  n: {pressed: false },
+  m: {pressed: false },
+  o: {pressed: false },
+  l: {pressed: false },
 }
 
 export function KeyBordinput() {
@@ -44,7 +37,29 @@ export function KeyBordinput() {
     keys.k.pressed = true
     break
   case 'Enter':
-      keys.Enter.pressed = true
+    keys.Enter.pressed = true
+    break
+  case 'KeyQ':
+    keys.q.pressed = true
+    break
+  case 'KeyZ':
+    keys.z.pressed = true
+    break
+  case 'KeyX':
+    keys.x.pressed = true
+    break
+  case 'KeyN':
+    keys.n.pressed = true
+    break
+  case 'KeyM':
+    keys.m.pressed = true
+    break
+  case 'KeyL':
+    keys.l.pressed = true
+    break
+  case 'KeyO':
+    keys.o.pressed = true
+    break
     }
   })
   //
@@ -70,6 +85,28 @@ export function KeyBordinput() {
         break
       case 'Enter':
         keys.Enter.pressed = false
+        break
+      case 'KeyQ':
+        keys.q.pressed = false
+        break
+      case 'KeyZ':
+        keys.z.pressed = false
+        break
+      case 'KeyX':
+        keys.x.pressed = false
+        break
+      case 'KeyN':
+        keys.n.pressed = false
+        break
+      case 'KeyM':
+        keys.m.pressed = false
+        break
+      case 'KeyL':
+          keys.l.pressed = false
+          break
+      case 'KeyO':
+        keys.o.pressed = false
+        break
       }
   })
 }
